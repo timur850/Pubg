@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>METRO DROP — кейсы Metro Royale</title>
+<style>
+:root{--bg:#0e0f13;--card:#181a21;--card2:#20232c;--line:#2a2e39;--txt:#eef0f5;--mut:#8a90a0;--acc:#ffb547;--acc2:#ff7a1a;--blue:#3d7bff;
+--c1:#9aa3b5;--c2:#3fa2ff;--c3:#8d5cff;--c4:#ff4fd8;--c5:#ffbf2e}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:80px;min-height:100vh}
+button{font:inherit;color:inherit;border:0;cursor:pointer;background:none}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(14,15,19,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:8px;font-weight:900;letter-spacing:1px;font-size:18px}
+.logo .m{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:grid;place-items:center;color:#1a1000;font-size:20px}
+.bal{display:flex;align-items:center;gap:6px;background:var(--card2);padding:8px 12px;border-radius:12px;font-weight:700}
+.coin{display:inline-block;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe7a3,#e8a020 60%,#a86a00);box-shadow:inset 0 0 0 2px #c98612;vertical-align:-3px}
+.plus{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#1a1000;width:26px;height:26px;border-radius:8px;font-weight:900}
+main{max-width:900px;margin:0 auto;padding:16px}
+.live{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px;scrollbar-width:none}
+.live::-webkit-scrollbar{display:none}
+.drop{flex:0 0 112px;height:74px;border-radius:12px;background:var(--card);position:relative;overflow:hidden;padding:6px 8px;font-size:10px;color:var(--mut);display:flex;flex-direction:column;justify-content:flex-end;animation:pop .4s}
+.drop::before{content:"";position:absolute;top:0;left:20%;right:20%;height:3px;border-radius:0 0 3px 3px;background:var(--rc)}
+.drop svg{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:54px;height:40px}
+.drop b{color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;position:relative}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+h2{font-size:20px;margin:6px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.case{background:var(--card);border-radius:18px;padding:12px;text-align:center;position:relative;overflow:hidden;transition:transform .15s}
+.case:active{transform:scale(.97)}
+.case .art{height:130px;display:grid;place-items:center}
+.case .nm{font-weight:700;font-size:14px;margin:6px 0 8px}
+.price{display:inline-flex;align-items:center;gap:5px;background:var(--card2);padding:6px 12px;border-radius:10px;font-weight:700;font-size:13px}
+.tag{position:absolute;top:10px;left:10px;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;background:var(--acc2);color:#1a0a00}
+.page{display:none}.page.on{display:block}
+.back{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:900;text-transform:uppercase;margin-bottom:14px}
+.back span{width:34px;height:34px;border-radius:10px;background:var(--card2);display:grid;place-items:center;font-size:18px}
+.reel{position:relative;height:150px;background:var(--card);border-radius:18px;overflow:hidden;margin-bottom:14px}
+.reel::before,.reel::after{content:"";position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
+.reel::before{left:0;background:linear-gradient(90deg,var(--card),transparent)}
+.reel::after{right:0;background:linear-gradient(-90deg,var(--card),transparent)}
+.marker{position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1.5px;background:var(--acc);z-index:3;box-shadow:0 0 12px var(--acc)}
+.marker::before{content:"";position:absolute;top:0;left:-7px;border:8.5px solid transparent;border-top-color:var(--acc)}
+.strip{position:absolute;top:15px;left:0;display:flex;gap:8px;will-change:transform}
+.it{flex:0 0 112px;height:120px;border-radius:14px;background:linear-gradient(180deg,var(--card2),color-mix(in srgb,var(--rc) 22%,var(--card2)));position:relative;padding:8px;display:flex;flex-direction:column;justify-content:flex-end;font-size:11px}
+.it::before{content:"";position:absolute;top:0;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:var(--rc)}
+.it svg{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:80px;height:58px}
+.it small{color:var(--mut);font-size:9px}
+.it b{font-weight:600;line-height:1.15;position:relative}
+.big{background:var(--case-art);display:grid;place-items:center;height:170px;border-radius:18px;margin-bottom:14px}
+.btn{width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#1a1000;font-weight:800;font-size:16px;display:flex;justify-content:center;align-items:center;gap:8px}
+.btn:disabled{opacity:.45}
+.btn.sec{background:var(--card2);color:var(--txt)}
+.qty{display:flex;gap:8px;margin-bottom:10px}
+.qty button{flex:1;padding:10px;border-radius:12px;background:var(--card);font-weight:700}
+.qty button.on{background:var(--card2);box-shadow:inset 0 0 0 2px var(--acc)}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:8px;margin-top:20px}
+.items .it{flex:none;width:auto}
+.chance{position:absolute;top:6px;right:7px;font-size:9px;color:var(--mut)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;display:none;align-items:center;justify-content:center;padding:20px}
+.modal.on{display:flex}
+.mbox{background:var(--card);border-radius:22px;padding:20px;width:100%;max-width:380px;text-align:center;animation:pop .3s}
+.mbox h3{font-size:18px;margin-bottom:12px}
+.wins{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px}
+.wins .it{flex:0 0 140px;height:150px}
+.wins .it svg{width:100px;height:72px}
+.row{display:flex;gap:8px}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;background:#121318;border-top:1px solid var(--line);padding:6px 0 calc(6px + env(safe-area-inset-bottom))}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--mut);padding:4px}
+nav button.on{color:var(--acc)}
+nav svg{width:22px;height:22px}
+.empty{color:var(--mut);text-align:center;padding:40px 0}
+.inv .it{cursor:pointer}
+.inv .sell{position:absolute;inset:auto 6px 6px 6px;display:none}
+.stat{display:flex;gap:10px;margin-bottom:14px}
+.stat div{flex:1;background:var(--card);border-radius:14px;padding:12px;font-size:12px;color:var(--mut)}
+.stat b{display:block;color:var(--txt);font-size:17px;margin-top:4px}
+/* wheel */
+.wheel-wrap{position:relative;width:300px;height:300px;margin:10px auto 18px}
+#wheel{width:100%;height:100%;transition:transform 5s cubic-bezier(.15,.85,.2,1)}
+.wptr{position:absolute;top:-6px;left:50%;transform:translateX(-50%);border:13px solid transparent;border-top:24px solid var(--acc);filter:drop-shadow(0 0 6px var(--acc));z-index:2}
+.bets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.bets button{padding:14px 0;border-radius:12px;font-weight:800;font-size:16px;box-shadow:inset 0 0 0 2px transparent}
+.bets button.on{box-shadow:inset 0 0 0 3px #fff}
+.inp{display:flex;align-items:center;background:var(--card);border-radius:12px;padding:0 12px}
+.inp input{flex:1;background:none;border:0;color:var(--txt);font:inherit;font-size:16px;padding:13px 0;outline:none}
+.res{text-align:center;font-weight:800;min-height:24px;margin:8px 0}
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--card2);padding:10px 16px;border-radius:12px;z-index:60;font-size:14px;display:none;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.demo{font-size:11px;color:var(--mut);text-align:center;margin:24px 0 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="m">M</div>METRO DROP</div>
+  <div class="row" style="align-items:center">
+    <div class="bal"><span class="coin"></span><span id="bal">0</span></div>
+    <button class="plus" onclick="topup()">+</button>
+  </div>
+</header>
+
+<main>
+  <div class="live" id="live"></div>
+
+  <section class="page on" id="p-cases">
+    <h2>Кейсы Metro Royale</h2>
+    <div class="grid" id="grid"></div>
+    <p class="demo">Демо-режим: монеты виртуальные, вывода нет.</p>
+  </section>
+
+  <section class="page" id="p-case">
+    <div class="back" onclick="go('cases')"><span>‹</span><div id="cname"></div></div>
+    <div class="reel" id="reelBox" style="display:none"><div class="marker"></div><div class="strip" id="strip"></div></div>
+    <div class="big" id="cbig"></div>
+    <div class="qty" id="qty"></div>
+    <button class="btn" id="openBtn" onclick="openCase()"></button>
+    <h2 style="margin-top:22px">Содержимое кейса</h2>
+    <div class="items" id="citems"></div>
+  </section>
+
+  <section class="page" id="p-wheel">
+    <h2>Колесо</h2>
+    <div class="wheel-wrap"><div class="wptr"></div><svg id="wheel" viewBox="-100 -100 200 200"></svg></div>
+    <div class="inp"><input id="wbet" type="number" value="50" min="1"><span class="coin"></span></div>
+    <div class="bets" id="bets"></div>
+    <div class="res" id="wres"></div>
+    <button class="btn" id="wbtn" onclick="spinWheel()">Крутить</button>
+  </section>
+
+  <section class="page" id="p-inv">
+    <h2>Инвентарь</h2>
+    <div class="stat"><div>Предметов<b id="sCnt">0</b></div><div>Стоимость<b id="sSum">0</b></div><div>Открыто<b id="sOpen">0</b></div></div>
+    <button class="btn sec" style="margin-bottom:12px" onclick="sellAll()">Продать всё</button>
+    <div class="items inv" id="inv"></div>
+  </section>
+</main>
+
+<nav>
+  <button class="on" data-p="cases" onclick="go('cases')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l9-5 9 5v9l-9 5-9-5zm2 1.2v6.6l6 3.3v-6.6zm14 0l-6 3.3v6.6l6-3.3zM12 5.3L6.2 8.5 12 11.7l5.8-3.2z"/></svg>Кейсы</button>
+  <button data-p="wheel" onclick="go('wheel')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 2.1A8 8 0 0119.9 11H13zM11 4.1V11H4.1A8 8 0 0111 4.1zM4.1 13H11v6.9A8 8 0 014.1 13zM13 19.9V13h6.9a8 8 0 01-6.9 6.9z"/></svg>Колесо</button>
+  <button data-p="inv" onclick="go('inv')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6a2 2 0 012 2v1h2a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h2V5a2 2 0 012-2zm0 3h6V5H9zm-4 4v3h14v-3zm0 5v4h14v-4z"/></svg>Инвентарь</button>
+  <button onclick="topup()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>Пополнить</button>
+</nav>
+
+<div class="modal" id="modal"><div class="mbox">
+  <h3>Ваш дроп</h3>
+  <div class="wins" id="wins"></div>
+  <div class="row"><button class="btn sec" onclick="closeModal()">Забрать</button><button class="btn" id="sellWon" onclick="sellWon()"></button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- рисованные иконки предметов (своя графика) ----------
+const R={1:'var(--c1)',2:'var(--c2)',3:'var(--c3)',4:'var(--c4)',5:'var(--c5)'};
+const RN={1:'Обычный',2:'Улучшенный',3:'Редкий',4:'Эпический',5:'Легендарный'};
+let _u=0;
+function ico(t,c){
+  const u='i'+(_u++);
+  const D=`<defs>
+   <linearGradient id="${u}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9dde6"/><stop offset=".45" stop-color="#6b7180"/><stop offset=".55" stop-color="#3a3f4a"/><stop offset="1" stop-color="#20232a"/></linearGradient>
+   <linearGradient id="${u}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4f5c"/><stop offset="1" stop-color="#15171c"/></linearGradient>
+   <linearGradient id="${u}c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset=".35" stop-color="${c}"/><stop offset="1" stop-color="${c}" stop-opacity=".55"/></linearGradient>
+   <linearGradient id="${u}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a0683a"/><stop offset="1" stop-color="#4a2a14"/></linearGradient>
+   <linearGradient id="${u}k" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7d8a5a"/><stop offset="1" stop-color="#2f3622"/></linearGradient>
+   <radialGradient id="${u}g"><stop offset="0" stop-color="${c}" stop-opacity=".55"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>
+   <filter id="${u}s"><feDropShadow dx="0" dy="2" stdDeviation="1.6" flood-color="#000" flood-opacity=".7"/></filter></defs>
+   <ellipse cx="40" cy="32" rx="38" ry="24" fill="url(#${u}g)"/>`;
+  const M=`url(#${u}m)`,Dk=`url(#${u}d)`,C=`url(#${u}c)`,Wd=`url(#${u}w)`,K=`url(#${u}k)`,L='stroke="#000" stroke-opacity=".55" stroke-width=".6"';
+  const s={
+   rifle:`<g filter="url(#${u}s)">
+     <path d="M56 24h20v3h-20z" fill="${Dk}" ${L}/><path d="M72 23h4v5h-4z" fill="${M}"/>
+     <path d="M14 22h44v8H14z" fill="${C}" ${L}/><path d="M16 23h40v1.4H16z" fill="#fff" opacity=".45"/>
+     <rect x="24" y="17" width="20" height="5" rx="1.5" fill="${Dk}" ${L}/><rect x="27" y="15.5" width="14" height="2.2" rx="1" fill="${M}"/>
+     <path d="M2 24l12-1v8L4 34H2z" fill="${C}" ${L}/>
+     <path d="M30 30h8l2 3-3 17h-6l1-16z" fill="${Dk}" ${L} transform="rotate(8 34 30)"/>
+     <path d="M16 30h9l-2 11h-6z" fill="${Dk}" ${L}/>
+     <path d="M44 30h12v4H44z" fill="${M}" ${L}/><circle cx="18" cy="26" r="1" fill="#000" opacity=".5"/></g>`,
+   sniper:`<g filter="url(#${u}s)">
+     <path d="M48 25h30v2.6H48z" fill="${Dk}" ${L}/><path d="M74 24h5v4.6h-5z" fill="${M}"/>
+     <path d="M2 26c6-2 12-3 18-3h30v7H24l-6 8H6L2 32z" fill="${C}" ${L}/><path d="M20 24.2h28v1.2H20z" fill="#fff" opacity=".5"/>
+     <rect x="22" y="13" width="24" height="7" rx="3.5" fill="${Dk}" ${L}/><rect x="19" y="12" width="5" height="9" rx="2" fill="${M}"/><rect x="44" y="12" width="5" height="9" rx="2" fill="${M}"/>
+     <path d="M26 14.5h16" stroke="#fff" stroke-opacity=".35" stroke-width="1.2"/><path d="M30 20v3M38 20v3" stroke="#222" stroke-width="2"/>
+     <path d="M30 30h6l1 10h-6z" fill="${Dk}" ${L}/><path d="M52 30l6 12M56 30l-2 12" stroke="#2a2d34" stroke-width="1.6"/></g>`,
+   smg:`<g filter="url(#${u}s)">
+     <path d="M50 24h18v4H50z" fill="${Dk}" ${L}/><rect x="66" y="23" width="6" height="6" rx="1" fill="${M}"/>
+     <path d="M16 20h36v12H16z" fill="${C}" ${L}/><path d="M18 21.2h32v1.6H18z" fill="#fff" opacity=".45"/>
+     <path d="M2 23h14v4H8l-4 6H2z" fill="${Dk}" ${L}/>
+     <rect x="38" y="32" width="6" height="22" rx="1" fill="${Dk}" ${L} transform="rotate(-6 41 32)"/>
+     <path d="M22 32h8l-2 12h-6z" fill="${Dk}" ${L}/><rect x="26" y="16" width="14" height="4" rx="1" fill="${M}"/></g>`,
+   vest:`<g filter="url(#${u}s)">
+     <path d="M24 6h8l8 7 8-7h8l7 10-3 6v32c0 2-2 3-4 3H24c-2 0-4-1-4-3V22l-3-6z" fill="${K}" ${L}/>
+     <path d="M26 24h28v24H26z" fill="${C}" opacity=".9" ${L}/>
+     <path d="M26 30h28M26 36h28M26 42h28" stroke="#000" stroke-opacity=".35" stroke-width="1.2"/>
+     <rect x="28" y="26" width="7" height="9" rx="1" fill="#2a301e" ${L}/><rect x="36.5" y="26" width="7" height="9" rx="1" fill="#2a301e" ${L}/><rect x="45" y="26" width="7" height="9" rx="1" fill="#2a301e" ${L}/>
+     <path d="M30 8l10 9 10-9" stroke="#fff" stroke-opacity=".25" fill="none"/><path d="M22 18l4 3M58 18l-4 3" stroke="#000" stroke-opacity=".4"/></g>`,
+   helmet:`<g filter="url(#${u}s)">
+     <path d="M14 42c0-17 11-30 26-30s26 13 26 30l3 4H11z" fill="${K}" ${L}/>
+     <path d="M20 26c4-8 11-12 20-12" stroke="#fff" stroke-opacity=".35" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+     <path d="M24 34h32c2 0 3 2 3 4v4H21v-4c0-2 1-4 3-4z" fill="${C}" ${L}/>
+     <rect x="34" y="14" width="12" height="7" rx="2" fill="${M}" ${L}/><circle cx="40" cy="17.5" r="2" fill="${c}"/>
+     <path d="M11 46h58" stroke="#000" stroke-opacity=".5" stroke-width="1.5"/></g>`,
+   bag:`<g filter="url(#${u}s)">
+     <path d="M30 10c0-3 4-5 10-5s10 2 10 5v3H30z" fill="none" stroke="${Dk}" stroke-width="3"/>
+     <rect x="20" y="12" width="40" height="44" rx="9" fill="${K}" ${L}/>
+     <path d="M20 22h40" stroke="#000" stroke-opacity=".35" stroke-width="1.2"/>
+     <rect x="26" y="30" width="28" height="20" rx="4" fill="${C}" ${L}/><path d="M26 36h28" stroke="#000" stroke-opacity=".3"/>
+     <rect x="37" y="33" width="6" height="5" rx="1" fill="${M}"/>
+     <rect x="14" y="26" width="7" height="18" rx="3" fill="${K}" ${L}/><rect x="59" y="26" width="7" height="18" rx="3" fill="${K}" ${L}/>
+     <path d="M24 15c4-1 10-1.5 16-1.5" stroke="#fff" stroke-opacity=".3" stroke-width="2" fill="none"/></g>`,
+   key:`<g filter="url(#${u}s)">
+     <circle cx="22" cy="30" r="13" fill="${C}" ${L}/><circle cx="22" cy="30" r="5.5" fill="#15171c"/>
+     <path d="M14 23a10 10 0 0 1 10-3" stroke="#fff" stroke-opacity=".6" stroke-width="2" fill="none"/>
+     <path d="M34 27h38v6h-4v8h-5v-8h-4v5h-5v-5H34z" fill="${C}" ${L}/><path d="M36 28h34" stroke="#fff" stroke-opacity=".5"/>
+     <rect x="16" y="12" width="12" height="5" rx="1.5" fill="${M}" ${L}/></g>`,
+   card:`<g filter="url(#${u}s)" transform="rotate(-8 40 30)">
+     <rect x="12" y="12" width="56" height="36" rx="5" fill="${C}" ${L}/>
+     <path d="M12 20h56" stroke="#000" stroke-opacity=".25" stroke-width="5"/>
+     <rect x="18" y="26" width="13" height="10" rx="2" fill="#e8c35a" ${L}/><path d="M18 31h13M24.5 26v10" stroke="#8a6a1a" stroke-width=".7"/>
+     <path d="M36 28h26M36 33h20M18 42h44" stroke="#000" stroke-opacity=".35" stroke-width="1.6"/>
+     <path d="M14 14h40" stroke="#fff" stroke-opacity=".55" stroke-width="1.2"/></g>`,
+   gold:`<g filter="url(#${u}s)">
+     <path d="M8 48l8-14h30l-6 14z" fill="#b8860b" ${L}/><path d="M16 34l5-8h26l-1 8z" fill="#ffe08a" ${L}/>
+     <path d="M34 48l8-14h30l-6 14z" fill="#d4a017" ${L}/><path d="M42 34l5-8h26l-1 8z" fill="#fff0b0" ${L}/>
+     <path d="M24 22l5-8h26l-5 8z" fill="#ffd54a" ${L}/><path d="M29 14h26l-2 3H27z" fill="#fff" opacity=".6"/>
+     <path d="M30 28h14" stroke="#fff" stroke-opacity=".8" stroke-width="1.2"/><circle cx="62" cy="14" r="2" fill="#fff"/><path d="M62 9v10M57 14h10" stroke="#fff" stroke-width=".8"/></g>`,
+   gpu:`<g filter="url(#${u}s)">
+     <rect x="6" y="16" width="66" height="28" rx="4" fill="${Dk}" ${L}/>
+     <path d="M6 18h66" stroke="${c}" stroke-width="2.5"/>
+     <circle cx="25" cy="30" r="10" fill="#0d0e12" ${L}/><circle cx="53" cy="30" r="10" fill="#0d0e12" ${L}/>
+     <g fill="${M}"><path d="M25 30l8-4-2 7zM25 30l-4-8 7 2zM25 30l-8 4 2-7zM25 30l4 8-7-2z"/><path d="M53 30l8-4-2 7zM53 30l-4-8 7 2zM53 30l-8 4 2-7zM53 30l4 8-7-2z"/></g>
+     <circle cx="25" cy="30" r="2.5" fill="${c}"/><circle cx="53" cy="30" r="2.5" fill="${c}"/>
+     <rect x="12" y="44" width="34" height="5" fill="#d4a017"/><path d="M14 44v5M18 44v5M22 44v5M26 44v5M30 44v5M34 44v5M38 44v5M42 44v5" stroke="#7a5a10" stroke-width=".7"/>
+     <rect x="72" y="18" width="3" height="24" fill="${M}"/></g>`,
+   uc:`<g filter="url(#${u}s)">
+     <ellipse cx="46" cy="40" rx="18" ry="6" fill="#a87010"/><ellipse cx="46" cy="37" rx="18" ry="6" fill="#e0a52a"/>
+     <ellipse cx="46" cy="32" rx="18" ry="6" fill="#a87010"/><ellipse cx="46" cy="29" rx="18" ry="6" fill="#e0a52a"/>
+     <circle cx="32" cy="28" r="18" fill="${C}" ${L}/><circle cx="32" cy="28" r="13" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="1.5"/>
+     <text x="32" y="34" text-anchor="middle" font-size="15" font-weight="900" fill="#1a1000" font-family="system-ui,sans-serif">UC</text>
+     <path d="M20 20a14 14 0 0 1 10-6" stroke="#fff" stroke-opacity=".8" stroke-width="2" fill="none"/></g>`
+  }[t];
+  return `<svg viewBox="0 0 80 60">${D}${s}</svg>`;
+}
+
+// ---------- данные ----------
+const ITEMS={
+ scrap:['Металлолом','gold',1,5], tape:['Изолента','card',1,8], pills:['Аптечка','bag',1,12],
+ vest3:['Бронежилет ур.3','vest',1,15], helm3:['Шлем ур.3','helmet',1,14],
+ m416:['M416 (Металл)','rifle',2,35], akm:['AKM (Металл)','rifle',2,32], ump:['UMP45 (Улучш.)','smg',2,28], bag4:['Рюкзак ур.4','bag',2,40],
+ vest4:['Бронежилет ур.4','vest',3,85], helm4:['Шлем ур.4','helmet',3,80], vector:['Vector (Сталь)','smg',3,95], key:['Ключ «Лаборатория»','key',3,110],
+ mk14:['Mk14 (Сталь)','sniper',4,260], vest5:['Бронежилет ур.5','vest',4,240], gpu:['Видеокарта','gpu',4,300], card:['Карта доступа','card',4,220],
+ groza:['Groza (Кобальт)','rifle',5,780], awm:['AWM (Кобальт)','sniper',5,950], vest6:['Бронежилет ур.6','vest',5,700], gold:['Золотой слиток','gold',5,650], uc660:['660 UC','uc',5,1200]
+};
+const CASES=[
+ {id:'start',name:'Перрон',price:19,col:'#3fa2ff',tag:'',pool:{scrap:30,tape:25,pills:18,vest3:12,helm3:10,m416:3,ump:1.5,key:.5}},
+ {id:'tun',name:'Тоннель',price:45,col:'#8d5cff',tag:'ХИТ',pool:{pills:22,vest3:20,helm3:18,akm:14,m416:12,bag4:8,vest4:4,vector:1.5,mk14:.5}},
+ {id:'lab',name:'Лаборатория',price:99,col:'#22c57a',tag:'',pool:{akm:24,ump:20,bag4:18,key:14,helm4:10,vest4:8,card:4,gpu:1.5,groza:.5}},
+ {id:'army',name:'Военная база',price:180,col:'#ff4fd8',tag:'',pool:{bag4:24,vest4:22,helm4:18,vector:14,mk14:10,vest5:7,awm:3,vest6:2}},
+ {id:'vault',name:'Хранилище',price:320,col:'#ffbf2e',tag:'NEW',pool:{key:24,vector:20,card:18,gpu:14,vest5:12,gold:7,groza:3,uc660:2}},
+ {id:'cobalt',name:'Кобальт',price:600,col:'#ff5a3d',tag:'TOP',pool:{gpu:26,mk14:22,vest5:18,vest6:14,gold:10,groza:5,awm:3,uc660:2}}
+];
+function caseArt(c,size=110){
+ const u='c'+(_u++);
+ return `<svg width="${size}" height="${size*0.9}" viewBox="0 0 120 108">
+ <defs>
+  <radialGradient id="${u}g"><stop offset="0" stop-color="${c.col}" stop-opacity=".7"/><stop offset="1" stop-color="${c.col}" stop-opacity="0"/></radialGradient>
+  <linearGradient id="${u}t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a5f6a"/><stop offset="1" stop-color="#2b2e36"/></linearGradient>
+  <linearGradient id="${u}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3e48"/><stop offset="1" stop-color="#16181d"/></linearGradient>
+  <linearGradient id="${u}s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#262930"/><stop offset="1" stop-color="#121418"/></linearGradient>
+  <pattern id="${u}h" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="10" fill="#f5c400"/><rect x="5" width="5" height="10" fill="#111"/></pattern>
+  <filter id="${u}b"><feGaussianBlur stdDeviation="3"/></filter></defs>
+ <ellipse cx="60" cy="62" rx="60" ry="46" fill="url(#${u}g)"/>
+ <ellipse cx="60" cy="100" rx="44" ry="6" fill="#000" opacity=".5"/>
+ <path d="M12 44l48-16 48 16-48 16z" fill="url(#${u}t)" stroke="#000" stroke-opacity=".5"/>
+ <path d="M12 44l48 16v40L12 84z" fill="url(#${u}f)" stroke="#000" stroke-opacity=".5"/>
+ <path d="M108 44L60 60v40l48-16z" fill="url(#${u}s)" stroke="#000" stroke-opacity=".5"/>
+ <path d="M12 74l48 16v-6L12 68z" fill="url(#${u}h)" opacity=".9"/>
+ <path d="M60 90l48-16v-6L60 84z" fill="url(#${u}h)" opacity=".75"/>
+ <path d="M12 44l48 16 48-16" stroke="${c.col}" stroke-width="2.2" fill="none" filter="url(#${u}b)"/>
+ <path d="M12 44l48 16 48-16" stroke="${c.col}" stroke-width="1.4" fill="none"/>
+ <path d="M60 60v40" stroke="${c.col}" stroke-width="1.2" opacity=".8"/>
+ <g transform="translate(36 70) skewY(18)"><rect x="-10" y="-14" width="20" height="16" rx="2" fill="#0b0c10" stroke="${c.col}" stroke-width="1.6"/>
+  <text x="0" y="-1.5" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" font-size="12" fill="${c.col}">M</text></g>
+ <g transform="translate(84 66) skewY(-18)"><rect x="-6" y="-6" width="12" height="10" rx="2" fill="#5a5f6a" stroke="#000" stroke-opacity=".5"/><circle cx="0" cy="-1" r="2" fill="${c.col}"/></g>
+ <path d="M24 42l36-12 36 12" stroke="#fff" stroke-opacity=".25" fill="none"/>
+ <circle cx="20" cy="70" r="1.6" fill="#888"/><circle cx="52" cy="80" r="1.6" fill="#888"/><circle cx="100" cy="70" r="1.6" fill="#666"/>
+ <circle cx="100" cy="18" r="2.4" fill="#fff" opacity=".85"/><circle cx="18" cy="26" r="1.6" fill="#fff" opacity=".6"/><circle cx="88" cy="8" r="1.2" fill="${c.col}"/></svg>`;
+}
+// ---------- состояние ----------
+let S={bal:500,inv:[],opened:0};
+try{const s=JSON.parse(localStorage.getItem('metrodrop'));if(s)S=s}catch(e){}
+const save=()=>{try{localStorage.setItem('metrodrop',JSON.stringify(S))}catch(e){};render()};
+const fmt=n=>(Math.round(n*100)/100).toLocaleString('ru');
+let cur=null,count=1,busy=false,won=[];
+
+function itemHTML(k,extra=''){const[n,t,r,p]=ITEMS[k];return `<div class="it" style="--rc:${R[r]}">${extra}${ico(t,R[r])}<small>${RN[r]} · ${fmt(p)}</small><b>${n}</b></div>`}
+
+function render(){
+ document.getElementById('bal').textContent=fmt(S.bal);
+ document.getElementById('grid').innerHTML=CASES.map(c=>`<div class="case" onclick="openPage('${c.id}')">${c.tag?`<div class="tag">${c.tag}</div>`:''}<div class="art">${caseArt(c)}</div><div class="nm">${c.name}</div><div class="price">${fmt(c.price)} <span class="coin"></span></div></div>`).join('');
+ const inv=document.getElementById('inv');
+ inv.innerHTML=S.inv.length?S.inv.map((k,i)=>`<div onclick="sell(${i})">${itemHTML(k)}</div>`).join(''):'<div class="empty" style="grid-column:1/-1">Пусто. Открой кейс!</div>';
+ document.getElementById('sCnt').textContent=S.inv.length;
+ document.getElementById('sSum').textContent=fmt(S.inv.reduce((a,k)=>a+ITEMS[k][3],0));
+ document.getElementById('sOpen').textContent=S.opened;
+ if(cur)updBtn();
+}
+function go(p){
+ if(busy)return;
+ document.querySelectorAll('.page').forEach(e=>e.classList.remove('on'));
+ document.getElementById('p-'+p).classList.add('on');
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+ scrollTo(0,0);
+}
+function openPage(id){
+ cur=CASES.find(c=>c.id===id);count=1;
+ document.getElementById('cname').textContent=cur.name;
+ const big=document.getElementById('cbig');big.innerHTML=caseArt(cur,190);big.style.display='grid';
+ big.style.background=`radial-gradient(circle,${cur.col}33,transparent 70%),var(--card)`;
+ document.getElementById('reelBox').style.display='none';
+ document.getElementById('qty').innerHTML=[1,2,3,5].map(n=>`<button class="${n===1?'on':''}" onclick="setQty(${n},this)">x${n}</button>`).join('');
+ const tot=Object.values(cur.pool).reduce((a,b)=>a+b,0);
+ document.getElementById('citems').innerHTML=Object.entries(cur.pool).sort((a,b)=>ITEMS[b[0]][3]-ITEMS[a[0]][3]).map(([k,w])=>itemHTML(k,`<span class="chance">${(w/tot*100).toFixed(w/tot<.01?2:1)}%</span>`)).join('');
+ updBtn();go('case');
+}
+function setQty(n,el){if(busy)return;count=n;document.querySelectorAll('#qty button').forEach(b=>b.classList.remove('on'));el.classList.add('on');updBtn()}
+function updBtn(){const b=document.getElementById('openBtn');const cost=cur.price*count;b.innerHTML=`Открыть за ${fmt(cost)} <span class="coin"></span>`;b.disabled=busy||S.bal<cost}
+function roll(pool){const e=Object.entries(pool),t=e.reduce((a,b)=>a+b[1],0);let r=Math.random()*t;for(const[k,w]of e){if((r-=w)<0)return k}return e[0][0]}
+
+function openCase(){
+ const cost=cur.price*count;if(busy||S.bal<cost)return;
+ busy=true;S.bal-=cost;S.opened+=count;
+ won=Array.from({length:count},()=>roll(cur.pool));
+ save();
+ document.getElementById('cbig').style.display='none';
+ const box=document.getElementById('reelBox'),strip=document.getElementById('strip');box.style.display='block';
+ const N=50,W=120,win=won[0];
+ const arr=Array.from({length:N},(_,i)=>i===42?win:roll(cur.pool));
+ strip.style.transition='none';strip.style.transform='translateX(0)';
+ strip.innerHTML=arr.map(k=>itemHTML(k)).join('');
+ const off=42*W+56-box.clientWidth/2+(Math.random()*80-40);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{strip.style.transition='transform 5.5s cubic-bezier(.12,.75,.15,1)';strip.style.transform=`translateX(${-off}px)`}));
+ setTimeout(()=>{busy=false;showWin();},5800);
+}
+function showWin(){
+ S.inv.push(...won);save();
+ won.forEach(addLive);
+ document.getElementById('wins').innerHTML=won.map(k=>itemHTML(k)).join('');
+ document.getElementById('sellWon').innerHTML=`Продать ${fmt(won.reduce((a,k)=>a+ITEMS[k][3],0))} <span class="coin"></span>`;
+ document.getElementById('modal').classList.add('on');
+}
+function closeModal(){document.getElementById('modal').classList.remove('on');document.getElementById('reelBox').style.display='none';document.getElementById('cbig').style.display='grid';updBtn()}
+function sellWon(){won.forEach(k=>{const i=S.inv.lastIndexOf(k);if(i>-1){S.inv.splice(i,1);S.bal+=ITEMS[k][3]}});save();closeModal();toast('Продано!')}
+function sell(i){const k=S.inv[i];S.bal+=ITEMS[k][3];S.inv.splice(i,1);save();toast(`${ITEMS[k][0]} продан за ${fmt(ITEMS[k][3])}`)}
+function sellAll(){if(!S.inv.length)return;const s=S.inv.reduce((a,k)=>a+ITEMS[k][3],0);S.bal+=s;S.inv=[];save();toast(`+${fmt(s)} монет`)}
+function topup(){S.bal+=500;save();toast('+500 демо-монет')}
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',1800)}
+
+// live-лента дропов
+function addLive(k){const[n,t,r]=ITEMS[k];const l=document.getElementById('live');const d=document.createElement('div');d.className='drop';d.style.setProperty('--rc',R[r]);d.innerHTML=ico(t,R[r])+`<b>${n}</b>`;l.prepend(d);while(l.children.length>20)l.lastChild.remove()}
+const allKeys=Object.keys(ITEMS);
+for(let i=0;i<10;i++)addLive(roll(CASES[Math.floor(Math.random()*CASES.length)].pool));
+setInterval(()=>addLive(roll(CASES[Math.floor(Math.random()*CASES.length)].pool)),3500);
+
+// ---------- колесо ----------
+const WSEG=[];const WM=[{m:2,c:'#3d7bff',n:24},{m:3,c:'#22c57a',n:16},{m:5,c:'#e8364a',n:10},{m:50,c:'#ffbf2e',n:1}];
+WM.forEach(o=>{for(let i=0;i<o.n;i++)WSEG.push(o)});
+for(let i=WSEG.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[WSEG[i],WSEG[j]]=[WSEG[j],WSEG[i]]}
+(function drawWheel(){const n=WSEG.length,a=2*Math.PI/n;let h='';WSEG.forEach((s,i)=>{const a0=i*a-Math.PI/2-a/2,a1=a0+a;h+=`<path d="M0 0L${95*Math.cos(a0)} ${95*Math.sin(a0)}A95 95 0 0 1 ${95*Math.cos(a1)} ${95*Math.sin(a1)}Z" fill="${s.c}" stroke="#0e0f13" stroke-width="1"/>`});
+ h+=`<circle r="36" fill="#181a21" stroke="#2a2e39" stroke-width="3"/><text y="7" text-anchor="middle" font-size="20" font-weight="900" fill="#ffb547" font-family="sans-serif">M</text>`;document.getElementById('wheel').innerHTML=h})();
+let pick=0,wrot=0;
+document.getElementById('bets').innerHTML=WM.map((o,i)=>`<button style="background:${o.c};color:${i===3?'#1a1000':'#fff'}" class="${i?'':'on'}" onclick="pickW(${i},this)">${o.m}x</button>`).join('');
+function pickW(i,el){if(busy)return;pick=i;document.querySelectorAll('#bets button').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
+function spinWheel(){
+ const bet=+document.getElementById('wbet').value;if(busy)return;
+ if(!(bet>0)||bet>S.bal)return toast('Недостаточно монет');
+ busy=true;S.bal-=bet;save();document.getElementById('wres').textContent='';document.getElementById('wbtn').disabled=true;
+ const i=Math.floor(Math.random()*WSEG.length),n=WSEG.length;
+ wrot+=360*6+((360-(i*360/n))-(wrot%360)+360)%360+(Math.random()-.5)*(360/n)*.7;
+ document.getElementById('wheel').style.transform=`rotate(${wrot}deg)`;
+ setTimeout(()=>{busy=false;document.getElementById('wbtn').disabled=false;const s=WSEG[i],r=document.getElementById('wres');
+  if(s===WM[pick]){const w=bet*s.m;S.bal+=w;save();r.style.color='#3ddc84';r.textContent=`Выпало ${s.m}x — выигрыш ${fmt(w)}!`;}
+  else{r.style.color='#ff6b6b';r.textContent=`Выпало ${s.m}x — мимо`;}},5200);
+}
+render();
+</script>
+</body>
+</html>
