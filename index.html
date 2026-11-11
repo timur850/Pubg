@@ -87,6 +87,13 @@ nav svg{width:22px;height:22px}
 .res{text-align:center;font-weight:800;min-height:24px;margin:8px 0}
 .toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--card2);padding:10px 16px;border-radius:12px;z-index:60;font-size:14px;display:none;box-shadow:0 8px 30px rgba(0,0,0,.5)}
 .demo{font-size:11px;color:var(--mut);text-align:center;margin:24px 0 0}
+.it svg{filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
+.it{transition:transform .2s}
+.it:hover{transform:translateY(-3px) perspective(400px) rotateX(6deg)}
+.it.r5::after,.case::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.18) 50%,transparent 65%);background-size:250% 100%;animation:shine 3s infinite;pointer-events:none}
+.it.r4{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rc) 45%,transparent)}
+.it.r5{box-shadow:inset 0 0 0 1px var(--rc),0 0 18px -4px var(--rc)}
+@keyframes shine{0%{background-position:150% 0}100%{background-position:-50% 0}}
 </style>
 </head>
 <body>
@@ -158,9 +165,21 @@ function ico(t,c){
   const D=`<defs>
    <linearGradient id="${u}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9dde6"/><stop offset=".45" stop-color="#6b7180"/><stop offset=".55" stop-color="#3a3f4a"/><stop offset="1" stop-color="#20232a"/></linearGradient>
    <linearGradient id="${u}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4f5c"/><stop offset="1" stop-color="#15171c"/></linearGradient>
-   <linearGradient id="${u}c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset=".35" stop-color="${c}"/><stop offset="1" stop-color="${c}" stop-opacity=".55"/></linearGradient>
+   <linearGradient id="${u}cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".3" stop-color="${c}"/><stop offset=".75" stop-color="${c}" stop-opacity=".75"/><stop offset="1" stop-color="#111" stop-opacity=".9"/></linearGradient>
+   <pattern id="${u}c" patternUnits="userSpaceOnUse" width="80" height="60">
+    <rect width="80" height="60" fill="url(#${u}cg)"/>
+    <g fill="#000" opacity=".22"><path d="M4 18c6-4 12 0 10 5s-9 4-12 1zM30 26c5-3 11-1 9 4s-8 4-11 1zM52 18c7-2 12 3 8 6s-10 1-9-3zM64 30c4-2 9 1 7 4s-7 2-8-1zM18 34c4-1 8 2 6 4s-7 1-7-2z"/></g>
+    <g fill="#fff" opacity=".13"><path d="M20 20c4-2 8 1 6 3s-6 1-6-1zM44 24c3-1 6 1 5 3s-5 1-5-1zM8 30c3-1 6 1 4 3s-5 0-4-2zM58 26c3-1 5 1 4 2s-4 1-4-1z"/></g>
+    <path d="M10 25l7-2M40 22l9 3M60 31l6-3M26 29l5 1" stroke="#fff" stroke-opacity=".35" stroke-width=".5"/>
+   </pattern>
    <linearGradient id="${u}w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a0683a"/><stop offset="1" stop-color="#4a2a14"/></linearGradient>
-   <linearGradient id="${u}k" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7d8a5a"/><stop offset="1" stop-color="#2f3622"/></linearGradient>
+   <linearGradient id="${u}kg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a9666"/><stop offset=".6" stop-color="#4c5636"/><stop offset="1" stop-color="#22281a"/></linearGradient>
+   <pattern id="${u}k" patternUnits="userSpaceOnUse" width="80" height="60">
+    <rect width="80" height="60" fill="url(#${u}kg)"/>
+    <g fill="#2b3120" opacity=".7"><path d="M20 10c6-3 12 1 9 6s-10 3-11-1zM44 20c7-2 11 3 7 7s-10 1-9-3zM26 34c5-3 10 0 8 5s-9 3-10 0zM50 42c4-2 9 1 7 5s-8 2-8-2zM16 48c4-1 7 2 5 4s-6 1-6-2z"/></g>
+    <g fill="#a39466" opacity=".5"><path d="M34 12c3-1 6 1 4 3s-5 1-4-1zM24 24c3-2 6 0 5 2s-5 2-5 0zM40 34c4-1 7 2 5 4s-6 0-5-3zM56 30c2-1 5 1 3 3s-4 0-3-2zM32 50c3-1 5 1 4 3s-5 0-4-2z"/></g>
+    <path d="M22 18l6 2M46 28l7-1M30 44l5 2M54 48l4-3" stroke="#d8d2b8" stroke-opacity=".35" stroke-width=".6"/>
+   </pattern>
    <radialGradient id="${u}g"><stop offset="0" stop-color="${c}" stop-opacity=".55"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>
    <filter id="${u}s"><feDropShadow dx="0" dy="2" stdDeviation="1.6" flood-color="#000" flood-opacity=".7"/></filter></defs>
    <ellipse cx="40" cy="32" rx="38" ry="24" fill="url(#${u}g)"/>`;
@@ -291,7 +310,7 @@ const save=()=>{try{localStorage.setItem('metrodrop',JSON.stringify(S))}catch(e)
 const fmt=n=>(Math.round(n*100)/100).toLocaleString('ru');
 let cur=null,count=1,busy=false,won=[];
 
-function itemHTML(k,extra=''){const[n,t,r,p]=ITEMS[k];return `<div class="it" style="--rc:${R[r]}">${extra}${ico(t,R[r])}<small>${RN[r]} · ${fmt(p)}</small><b>${n}</b></div>`}
+function itemHTML(k,extra=''){const[n,t,r,p]=ITEMS[k];return `<div class="it r${r}" style="--rc:${R[r]}">${extra}${ico(t,R[r])}<small>${RN[r]} · ${fmt(p)}</small><b>${n}</b></div>`}
 
 function render(){
  document.getElementById('bal').textContent=fmt(S.bal);
