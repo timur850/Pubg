@@ -80,6 +80,7 @@ td{padding:9px 12px;border-bottom:1px solid var(--line)}td:last-child{text-align
   <label>Почта</label><input class="f" id="lEmail" type="email" autocomplete="username">
   <label>Пароль</label><input class="f" id="lPass" type="password" autocomplete="current-password">
   <button class="btn" style="width:100%;margin-top:16px" onclick="login()">Войти</button>
+  <button class="btn sec" style="width:100%;margin-top:8px" onclick="signup()">Создать аккаунт</button>
   <p class="mut" id="lMsg" style="margin-top:12px"></p>
 </div>
 
@@ -135,6 +136,15 @@ async function login(){
   const r=await sb.auth.signInWithPassword({email:val('lEmail'),password:$('lPass').value});
   if(r.error)return $('lMsg').textContent='Неверная почта или пароль';
   start();
+}
+async function signup(){
+  const email=val('lEmail'),password=$('lPass').value;
+  if(!/^\S+@\S+\.\S+$/.test(email))return $('lMsg').textContent='Введи почту';
+  if(password.length<6)return $('lMsg').textContent='Пароль — минимум 6 символов';
+  $('lMsg').textContent='Создаю…';
+  const r=await sb.auth.signUp({email,password});
+  if(r.error)return $('lMsg').textContent='Ошибка: '+r.error.message;
+  $('lMsg').textContent='Аккаунт создан! Теперь попроси выдать ему права админа, потом нажми «Войти».';
 }
 async function logout(){await sb.auth.signOut();location.reload()}
 
