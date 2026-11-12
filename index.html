@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>METRO DROP — кейсы Metro Royale</title>
 <style>
+
 :root{--bg:#0e0f13;--card:#181a21;--card2:#20232c;--line:#2a2e39;--txt:#eef0f5;--mut:#8a90a0;--acc:#ffb547;--acc2:#ff7a1a;--blue:#3d7bff;
 --c1:#9aa3b5;--c2:#3fa2ff;--c3:#8d5cff;--c4:#ff4fd8;--c5:#ffbf2e}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -94,6 +95,62 @@ nav svg{width:22px;height:22px}
 .it.r4{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rc) 45%,transparent)}
 .it.r5{box-shadow:inset 0 0 0 1px var(--rc),0 0 18px -4px var(--rc)}
 @keyframes shine{0%{background-position:150% 0}100%{background-position:-50% 0}}
+
+.case .art{height:auto;aspect-ratio:1.4;display:block;margin:-12px -12px 4px;border-radius:18px 18px 0 0;overflow:hidden}
+.case .art img{width:100%;height:100%;object-fit:cover;display:block}
+.case .free{background:linear-gradient(135deg,#3ddc84,#1fa35c);color:#04210f}
+.big{height:auto;aspect-ratio:1.45;overflow:hidden;padding:0}
+.big img{width:100%;height:100%;object-fit:cover;display:block}
+.btn.green{background:linear-gradient(135deg,#3ddc84,#1fa35c);color:#04210f}
+/* вертикальные барабаны */
+.vreels{display:none;gap:6px;height:300px;margin-bottom:14px;position:relative}
+.vreel{flex:1;position:relative;overflow:hidden;background:var(--card);border-radius:14px}
+.vreel::before,.vreel::after{content:"";position:absolute;left:0;right:0;height:70px;z-index:2;pointer-events:none}
+.vreel::before{top:0;background:linear-gradient(180deg,var(--card),transparent)}
+.vreel::after{bottom:0;background:linear-gradient(0deg,var(--card),transparent)}
+.vline{position:absolute;left:-4px;right:-4px;top:50%;height:3px;margin-top:-1.5px;background:var(--acc);box-shadow:0 0 12px var(--acc);z-index:5;pointer-events:none}
+.vstrip{position:absolute;left:4px;right:4px;top:0;display:flex;flex-direction:column;gap:6px;will-change:transform}
+.vstrip .it{flex:0 0 94px;width:auto;height:94px;padding:5px;font-size:9px}
+.vstrip .it svg{width:58px;height:42px;top:8px}
+.vstrip .it small{display:none}
+.vreel.done{box-shadow:0 0 0 2px var(--rc),0 0 22px -4px var(--rc)}
+.vreel.done .vstrip{filter:brightness(1.15)}
+/* игры */
+.ghub{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gcard{background:var(--card);border-radius:18px;padding:16px;text-align:left;min-height:120px;position:relative;overflow:hidden}
+.gcard b{font-size:17px;display:block;margin-top:46px}
+.gcard small{color:var(--mut);font-size:12px}
+.gcard .gi{position:absolute;top:14px;left:14px;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px}
+.seg{display:flex;background:var(--card);border-radius:12px;padding:4px;gap:4px;margin:10px 0}
+.seg button{flex:1;padding:10px 0;border-radius:9px;font-weight:700;font-size:13px;color:var(--mut)}
+.seg button.on{background:var(--card2);color:var(--txt)}
+.qb{display:flex;gap:6px;margin-left:8px}
+.qb button{background:var(--card2);padding:7px 10px;border-radius:8px;font-size:12px;font-weight:700}
+.mgrid{display:grid;gap:7px;margin:6px 0 10px}
+.cell{aspect-ratio:1;border-radius:12px;background:linear-gradient(180deg,#2a2e3a,#1d2029);font-size:22px;display:grid;place-items:center;color:var(--mut);font-weight:800;box-shadow:inset 0 -3px 0 rgba(0,0,0,.35);transition:transform .15s}
+.cell:active{transform:scale(.94)}
+.cell.gem{background:linear-gradient(180deg,#1e6b48,#124430);color:#fff;animation:pop .25s}
+.cell.bomb{background:linear-gradient(180deg,#8a2232,#4d121c);animation:pop .25s}
+.cell.dim{opacity:.45}
+.minfo{display:flex;justify-content:space-between;color:var(--mut);font-size:13px;margin-bottom:8px}
+.minfo b{color:var(--txt)}
+#plinko{width:100%;display:block;background:linear-gradient(180deg,#1b2a44,#14203a);border-radius:18px}
+.pslots{display:flex;gap:3px;margin:6px 0;padding:0 6.5%}
+.pslots div{flex:1;text-align:center;font-size:10px;font-weight:800;padding:5px 0;border-radius:6px;color:#1a1000;transition:transform .15s}
+.pslots div.hit{transform:translateY(4px) scale(1.08)}
+/* апгрейд */
+.upw{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.upw .slot{flex:1;height:130px;border-radius:16px;background:var(--card);display:grid;place-items:center;color:var(--mut);font-size:12px;text-align:center;position:relative;overflow:hidden}
+.upw .slot .it{width:100%;height:100%;border-radius:16px}
+.ring{width:150px;height:150px;flex:0 0 150px;position:relative}
+.ring svg{width:100%;height:100%}
+.ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:22px}
+#uptr{transform-origin:75px 75px;transition:transform 4s cubic-bezier(.15,.85,.2,1)}
+.uplist{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;max-height:330px;overflow:auto;padding:2px}
+.uplist .sel .it{box-shadow:0 0 0 2px #fff}
+.mult{display:flex;gap:6px;margin:8px 0}
+.mult button{flex:1;background:var(--card);padding:9px 0;border-radius:10px;font-weight:800;font-size:13px}
+.mult button.on{background:var(--card2);box-shadow:inset 0 0 0 2px var(--acc)}
 </style>
 </head>
 <body>
@@ -117,6 +174,7 @@ nav svg{width:22px;height:22px}
   <section class="page" id="p-case">
     <div class="back" onclick="go('cases')"><span>‹</span><div id="cname"></div></div>
     <div class="reel" id="reelBox" style="display:none"><div class="marker"></div><div class="strip" id="strip"></div></div>
+    <div class="vreels" id="vreels"></div>
     <div class="big" id="cbig"></div>
     <div class="qty" id="qty"></div>
     <button class="btn" id="openBtn" onclick="openCase()"></button>
@@ -124,13 +182,60 @@ nav svg{width:22px;height:22px}
     <div class="items" id="citems"></div>
   </section>
 
+  <section class="page" id="p-games">
+    <h2>Игры</h2>
+    <div class="ghub">
+      <button class="gcard" onclick="go('mines')"><div class="gi" style="background:#1e6b48">💣</div><b>Сапёр</b><small>3×3, 5×5, 7×7</small></button>
+      <button class="gcard" onclick="go('plinko')"><div class="gi" style="background:#2a4f8f">🔵</div><b>Плинко</b><small>Шарик до ×29</small></button>
+      <button class="gcard" onclick="go('wheel')"><div class="gi" style="background:#8f2a3a">🎡</div><b>Колесо</b><small>До ×50</small></button>
+      <button class="gcard" onclick="go('upgrade')"><div class="gi" style="background:#6a3fc4">⬆️</div><b>Апгрейд</b><small>Предмет → лучше</small></button>
+    </div>
+  </section>
+
+  <section class="page" id="p-mines">
+    <div class="back" onclick="go('games')"><span>‹</span><div>Сапёр</div></div>
+    <div class="minfo"><span>Множитель: <b id="mMul">x1.00</b></span><span>Следующий: <b id="mNext">—</b></span></div>
+    <div class="mgrid" id="mgrid"></div>
+    <div class="seg" id="mSize"></div>
+    <div class="seg" id="mBombs"></div>
+    <div class="inp"><input id="mBet" type="number" value="50" min="1"><span class="coin"></span><div class="qb"><button onclick="betOp('mBet',.5)">½</button><button onclick="betOp('mBet',2)">×2</button></div></div>
+    <div style="height:10px"></div>
+    <button class="btn" id="mBtn" onclick="minesBtn()">Сделать ставку</button>
+  </section>
+
+  <section class="page" id="p-plinko">
+    <div class="back" onclick="go('games')"><span>‹</span><div>Плинко</div></div>
+    <canvas id="plinko" width="600" height="460"></canvas>
+    <div class="pslots" id="pslots"></div>
+    <div class="seg" id="pDiff"></div>
+    <div class="inp"><input id="pBet" type="number" value="20" min="1"><span class="coin"></span><div class="qb"><button onclick="betOp('pBet',.5)">½</button><button onclick="betOp('pBet',2)">×2</button></div></div>
+    <div class="res" id="pres"></div>
+    <button class="btn" onclick="dropBall()">Бросить шар</button>
+  </section>
+
   <section class="page" id="p-wheel">
-    <h2>Колесо</h2>
+    <div class="back" onclick="go('games')"><span>‹</span><div>Колесо</div></div>
     <div class="wheel-wrap"><div class="wptr"></div><svg id="wheel" viewBox="-100 -100 200 200"></svg></div>
     <div class="inp"><input id="wbet" type="number" value="50" min="1"><span class="coin"></span></div>
     <div class="bets" id="bets"></div>
     <div class="res" id="wres"></div>
     <button class="btn" id="wbtn" onclick="spinWheel()">Крутить</button>
+  </section>
+
+  <section class="page" id="p-upgrade">
+    <h2>Апгрейд</h2>
+    <div class="upw">
+      <div class="slot" id="upFrom">Выбери свой предмет</div>
+      <div class="ring"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="#20232c" stroke-width="14"/><circle id="upArc" cx="75" cy="75" r="62" fill="none" stroke="#3ddc84" stroke-width="14" stroke-dasharray="0 400" transform="rotate(-90 75 75)" stroke-linecap="round"/><g id="uptr"><path d="M75 4l7 14h-14z" fill="#fff"/></g></svg><div class="pct" id="upPct">0%</div></div>
+      <div class="slot" id="upTo">Выбери цель</div>
+    </div>
+    <div class="res" id="upRes"></div>
+    <button class="btn" id="upBtn" onclick="doUpgrade()" disabled>Апгрейд</button>
+    <h2 style="margin-top:18px;font-size:16px">Твой предмет</h2>
+    <div class="uplist" id="upInv"></div>
+    <h2 style="margin-top:18px;font-size:16px">Цель</h2>
+    <div class="mult" id="upMult"></div>
+    <div class="uplist" id="upTargets"></div>
   </section>
 
   <section class="page" id="p-inv">
@@ -143,20 +248,20 @@ nav svg{width:22px;height:22px}
 
 <nav>
   <button class="on" data-p="cases" onclick="go('cases')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l9-5 9 5v9l-9 5-9-5zm2 1.2v6.6l6 3.3v-6.6zm14 0l-6 3.3v6.6l6-3.3zM12 5.3L6.2 8.5 12 11.7l5.8-3.2z"/></svg>Кейсы</button>
-  <button data-p="wheel" onclick="go('wheel')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 2.1A8 8 0 0119.9 11H13zM11 4.1V11H4.1A8 8 0 0111 4.1zM4.1 13H11v6.9A8 8 0 014.1 13zM13 19.9V13h6.9a8 8 0 01-6.9 6.9z"/></svg>Колесо</button>
+  <button data-p="games" onclick="go('games')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h10a5 5 0 015 5v1a4 4 0 01-7.2 2.4L14 14h-4l-.8 1.4A4 4 0 012 13v-1a5 5 0 015-5zm0 3v1.5H5.5V13H7v1.5h1.5V13H10v-1.5H8.5V10zm9 .5a1 1 0 100 2 1 1 0 000-2zm2 2a1 1 0 100 2 1 1 0 000-2z"/></svg>Игры</button>
+  <button data-p="upgrade" onclick="go('upgrade')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l7 7h-4v5H9v-5H5zm-7 15h14v3H5z"/></svg>Апгрейд</button>
   <button data-p="inv" onclick="go('inv')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6a2 2 0 012 2v1h2a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h2V5a2 2 0 012-2zm0 3h6V5H9zm-4 4v3h14v-3zm0 5v4h14v-4z"/></svg>Инвентарь</button>
   <button onclick="topup()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>Пополнить</button>
 </nav>
 
 <div class="modal" id="modal"><div class="mbox">
-  <h3>Ваш дроп</h3>
+  <h3 id="mTitle">Ваш дроп</h3>
   <div class="wins" id="wins"></div>
   <div class="row"><button class="btn sec" onclick="closeModal()">Забрать</button><button class="btn" id="sellWon" onclick="sellWon()"></button></div>
 </div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ---------- рисованные иконки предметов (своя графика) ----------
 const R={1:'var(--c1)',2:'var(--c2)',3:'var(--c3)',4:'var(--c4)',5:'var(--c5)'};
 const RN={1:'Обычный',2:'Улучшенный',3:'Редкий',4:'Эпический',5:'Легендарный'};
 let _u=0;
@@ -259,6 +364,7 @@ function ico(t,c){
   return `<svg viewBox="0 0 80 60">${D}${s}</svg>`;
 }
 
+
 // ---------- данные ----------
 const ITEMS={
  scrap:['Металлолом','gold',1,5], tape:['Изолента','card',1,8], pills:['Аптечка','bag',1,12],
@@ -266,140 +372,256 @@ const ITEMS={
  m416:['M416 (Металл)','rifle',2,35], akm:['AKM (Металл)','rifle',2,32], ump:['UMP45 (Улучш.)','smg',2,28], bag4:['Рюкзак ур.4','bag',2,40],
  vest4:['Бронежилет ур.4','vest',3,85], helm4:['Шлем ур.4','helmet',3,80], vector:['Vector (Сталь)','smg',3,95], key:['Ключ «Лаборатория»','key',3,110],
  mk14:['Mk14 (Сталь)','sniper',4,260], vest5:['Бронежилет ур.5','vest',4,240], gpu:['Видеокарта','gpu',4,300], card:['Карта доступа','card',4,220],
- groza:['Groza (Кобальт)','rifle',5,780], awm:['AWM (Кобальт)','sniper',5,950], vest6:['Бронежилет ур.6','vest',5,700], gold:['Золотой слиток','gold',5,650], uc660:['660 UC','uc',5,1200]
+ groza:['Groza (Кобальт)','rifle',5,780], awm:['AWM (Кобальт)','sniper',5,950], vest6:['Бронежилет ур.6','vest',5,700], gold:['Золотой слиток','gold',5,650],
+ uc60:['60 UC','uc',2,60], uc325:['325 UC','uc',4,320], uc660:['660 UC','uc',5,1200]
 };
+const FREE_MS=24*3600*1000;
 const CASES=[
- {id:'start',name:'Перрон',price:19,col:'#3fa2ff',tag:'',pool:{scrap:30,tape:25,pills:18,vest3:12,helm3:10,m416:3,ump:1.5,key:.5}},
- {id:'tun',name:'Тоннель',price:45,col:'#8d5cff',tag:'ХИТ',pool:{pills:22,vest3:20,helm3:18,akm:14,m416:12,bag4:8,vest4:4,vector:1.5,mk14:.5}},
- {id:'lab',name:'Лаборатория',price:99,col:'#22c57a',tag:'',pool:{akm:24,ump:20,bag4:18,key:14,helm4:10,vest4:8,card:4,gpu:1.5,groza:.5}},
- {id:'army',name:'Военная база',price:180,col:'#ff4fd8',tag:'',pool:{bag4:24,vest4:22,helm4:18,vector:14,mk14:10,vest5:7,awm:3,vest6:2}},
- {id:'vault',name:'Хранилище',price:320,col:'#ffbf2e',tag:'NEW',pool:{key:24,vector:20,card:18,gpu:14,vest5:12,gold:7,groza:3,uc660:2}},
- {id:'cobalt',name:'Кобальт',price:600,col:'#ff5a3d',tag:'TOP',pool:{gpu:26,mk14:22,vest5:18,vest6:14,gold:10,groza:5,awm:3,uc660:2}}
+ {id:'free',name:'Бесплатный 24ч',price:0,col:'#ffbf2e',img:'img/free.jpg',tag:'FREE',pool:{scrap:34,tape:26,pills:18,helm3:10,vest3:8,ump:3,uc60:1}},
+ {id:'supply',name:'Снабжение',price:29,col:'#3ddc84',img:'img/supply.jpg',tag:'',pool:{scrap:22,tape:22,pills:22,vest3:12,helm3:10,bag4:7,uc60:3,key:1.5,gpu:.5}},
+ {id:'armor',name:'Броня',price:89,col:'#8d5cff',img:'img/armor.jpg',tag:'ХИТ',pool:{vest3:22,helm3:20,bag4:18,helm4:14,vest4:13,vest5:8,uc60:3,vest6:2}},
+ {id:'weapon',name:'Арсенал',price:159,col:'#ff4a4a',img:'img/weapon.jpg',tag:'',pool:{ump:22,akm:20,m416:18,vector:16,mk14:12,uc60:6,groza:4,awm:2}},
+ {id:'elite',name:'Элитный',price:349,col:'#ff4fd8',img:'img/elite.jpg',tag:'TOP',pool:{vector:20,key:18,card:16,gpu:14,vest5:12,mk14:10,gold:5,vest6:3,awm:2}},
+ {id:'uc',name:'UC кейс',price:199,col:'#3d7bff',img:'img/uc.jpg',tag:'UC',pool:{scrap:26,pills:22,uc60:26,vest4:12,key:7,uc325:6,uc660:1}}
 ];
-function caseArt(c,size=110){
- const u='c'+(_u++);
- return `<svg width="${size}" height="${size*0.9}" viewBox="0 0 120 108">
- <defs>
-  <radialGradient id="${u}g"><stop offset="0" stop-color="${c.col}" stop-opacity=".7"/><stop offset="1" stop-color="${c.col}" stop-opacity="0"/></radialGradient>
-  <linearGradient id="${u}t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a5f6a"/><stop offset="1" stop-color="#2b2e36"/></linearGradient>
-  <linearGradient id="${u}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3e48"/><stop offset="1" stop-color="#16181d"/></linearGradient>
-  <linearGradient id="${u}s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#262930"/><stop offset="1" stop-color="#121418"/></linearGradient>
-  <pattern id="${u}h" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="10" fill="#f5c400"/><rect x="5" width="5" height="10" fill="#111"/></pattern>
-  <filter id="${u}b"><feGaussianBlur stdDeviation="3"/></filter></defs>
- <ellipse cx="60" cy="62" rx="60" ry="46" fill="url(#${u}g)"/>
- <ellipse cx="60" cy="100" rx="44" ry="6" fill="#000" opacity=".5"/>
- <path d="M12 44l48-16 48 16-48 16z" fill="url(#${u}t)" stroke="#000" stroke-opacity=".5"/>
- <path d="M12 44l48 16v40L12 84z" fill="url(#${u}f)" stroke="#000" stroke-opacity=".5"/>
- <path d="M108 44L60 60v40l48-16z" fill="url(#${u}s)" stroke="#000" stroke-opacity=".5"/>
- <path d="M12 74l48 16v-6L12 68z" fill="url(#${u}h)" opacity=".9"/>
- <path d="M60 90l48-16v-6L60 84z" fill="url(#${u}h)" opacity=".75"/>
- <path d="M12 44l48 16 48-16" stroke="${c.col}" stroke-width="2.2" fill="none" filter="url(#${u}b)"/>
- <path d="M12 44l48 16 48-16" stroke="${c.col}" stroke-width="1.4" fill="none"/>
- <path d="M60 60v40" stroke="${c.col}" stroke-width="1.2" opacity=".8"/>
- <g transform="translate(36 70) skewY(18)"><rect x="-10" y="-14" width="20" height="16" rx="2" fill="#0b0c10" stroke="${c.col}" stroke-width="1.6"/>
-  <text x="0" y="-1.5" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" font-size="12" fill="${c.col}">M</text></g>
- <g transform="translate(84 66) skewY(-18)"><rect x="-6" y="-6" width="12" height="10" rx="2" fill="#5a5f6a" stroke="#000" stroke-opacity=".5"/><circle cx="0" cy="-1" r="2" fill="${c.col}"/></g>
- <path d="M24 42l36-12 36 12" stroke="#fff" stroke-opacity=".25" fill="none"/>
- <circle cx="20" cy="70" r="1.6" fill="#888"/><circle cx="52" cy="80" r="1.6" fill="#888"/><circle cx="100" cy="70" r="1.6" fill="#666"/>
- <circle cx="100" cy="18" r="2.4" fill="#fff" opacity=".85"/><circle cx="18" cy="26" r="1.6" fill="#fff" opacity=".6"/><circle cx="88" cy="8" r="1.2" fill="${c.col}"/></svg>`;
-}
+
 // ---------- состояние ----------
-let S={bal:500,inv:[],opened:0};
-try{const s=JSON.parse(localStorage.getItem('metrodrop'));if(s)S=s}catch(e){}
-const save=()=>{try{localStorage.setItem('metrodrop',JSON.stringify(S))}catch(e){};render()};
+let S={bal:500,inv:[],opened:0,lastFree:0};
+try{const s=JSON.parse(localStorage.getItem('metrodrop2'));if(s)S=Object.assign(S,s)}catch(e){}
+const save=()=>{try{localStorage.setItem('metrodrop2',JSON.stringify(S))}catch(e){};render()};
 const fmt=n=>(Math.round(n*100)/100).toLocaleString('ru');
+const $=id=>document.getElementById(id);
 let cur=null,count=1,busy=false,won=[];
 
 function itemHTML(k,extra=''){const[n,t,r,p]=ITEMS[k];return `<div class="it r${r}" style="--rc:${R[r]}">${extra}${ico(t,R[r])}<small>${RN[r]} · ${fmt(p)}</small><b>${n}</b></div>`}
+function freeLeft(){return Math.max(0,S.lastFree+FREE_MS-Date.now())}
+function hms(ms){const s=Math.ceil(ms/1000);return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(x=>String(x).padStart(2,'0')).join(':')}
 
 function render(){
- document.getElementById('bal').textContent=fmt(S.bal);
- document.getElementById('grid').innerHTML=CASES.map(c=>`<div class="case" onclick="openPage('${c.id}')">${c.tag?`<div class="tag">${c.tag}</div>`:''}<div class="art">${caseArt(c)}</div><div class="nm">${c.name}</div><div class="price">${fmt(c.price)} <span class="coin"></span></div></div>`).join('');
- const inv=document.getElementById('inv');
- inv.innerHTML=S.inv.length?S.inv.map((k,i)=>`<div onclick="sell(${i})">${itemHTML(k)}</div>`).join(''):'<div class="empty" style="grid-column:1/-1">Пусто. Открой кейс!</div>';
- document.getElementById('sCnt').textContent=S.inv.length;
- document.getElementById('sSum').textContent=fmt(S.inv.reduce((a,k)=>a+ITEMS[k][3],0));
- document.getElementById('sOpen').textContent=S.opened;
+ $('bal').textContent=fmt(S.bal);
+ $('grid').innerHTML=CASES.map(c=>{
+   const pr=c.price?`${fmt(c.price)} <span class="coin"></span>`:(freeLeft()?`⏱ ${hms(freeLeft())}`:'Бесплатно');
+   return `<div class="case" onclick="openPage('${c.id}')">${c.tag?`<div class="tag ${c.price?'':'free'}">${c.tag}</div>`:''}<div class="art"><img src="${c.img}" alt="${c.name}"></div><div class="nm">${c.name}</div><div class="price" data-free="${c.price?0:1}">${pr}</div></div>`}).join('');
+ $('inv').innerHTML=S.inv.length?S.inv.map((k,i)=>`<div onclick="sell(${i})">${itemHTML(k)}</div>`).join(''):'<div class="empty" style="grid-column:1/-1">Пусто. Открой кейс!</div>';
+ $('sCnt').textContent=S.inv.length;
+ $('sSum').textContent=fmt(S.inv.reduce((a,k)=>a+ITEMS[k][3],0));
+ $('sOpen').textContent=S.opened;
  if(cur)updBtn();
+ renderUp();
 }
+setInterval(()=>{const f=document.querySelector('.price[data-free="1"]');if(f)f.textContent=freeLeft()?`⏱ ${hms(freeLeft())}`:'Бесплатно';if(cur&&!cur.price&&!busy)updBtn()},1000);
+
 function go(p){
  if(busy)return;
  document.querySelectorAll('.page').forEach(e=>e.classList.remove('on'));
- document.getElementById('p-'+p).classList.add('on');
- document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+ $('p-'+p).classList.add('on');
+ const map={mines:'games',plinko:'games',wheel:'games',case:'cases'};
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===(map[p]||p)));
  scrollTo(0,0);
+ if(p==='plinko')drawPlinko();
 }
 function openPage(id){
  cur=CASES.find(c=>c.id===id);count=1;
- document.getElementById('cname').textContent=cur.name;
- const big=document.getElementById('cbig');big.innerHTML=caseArt(cur,190);big.style.display='grid';
- big.style.background=`radial-gradient(circle,${cur.col}33,transparent 70%),var(--card)`;
- document.getElementById('reelBox').style.display='none';
- document.getElementById('qty').innerHTML=[1,2,3,5].map(n=>`<button class="${n===1?'on':''}" onclick="setQty(${n},this)">x${n}</button>`).join('');
+ $('cname').textContent=cur.name;
+ $('cbig').innerHTML=`<img src="${cur.img}" alt="">`;$('cbig').style.display='block';
+ $('reelBox').style.display='none';$('vreels').style.display='none';
+ $('qty').innerHTML=cur.price?[1,2,3,4,5].map(n=>`<button class="${n===1?'on':''}" onclick="setQty(${n},this)">x${n}</button>`).join(''):'';
  const tot=Object.values(cur.pool).reduce((a,b)=>a+b,0);
- document.getElementById('citems').innerHTML=Object.entries(cur.pool).sort((a,b)=>ITEMS[b[0]][3]-ITEMS[a[0]][3]).map(([k,w])=>itemHTML(k,`<span class="chance">${(w/tot*100).toFixed(w/tot<.01?2:1)}%</span>`)).join('');
+ $('citems').innerHTML=Object.entries(cur.pool).sort((a,b)=>ITEMS[b[0]][3]-ITEMS[a[0]][3]).map(([k,w])=>itemHTML(k,`<span class="chance">${(w/tot*100).toFixed(w/tot<.01?2:1)}%</span>`)).join('');
  updBtn();go('case');
 }
 function setQty(n,el){if(busy)return;count=n;document.querySelectorAll('#qty button').forEach(b=>b.classList.remove('on'));el.classList.add('on');updBtn()}
-function updBtn(){const b=document.getElementById('openBtn');const cost=cur.price*count;b.innerHTML=`Открыть за ${fmt(cost)} <span class="coin"></span>`;b.disabled=busy||S.bal<cost}
+function updBtn(){const b=$('openBtn');
+ if(!cur.price){const l=freeLeft();b.className='btn green';b.innerHTML=l?`Доступно через ${hms(l)}`:'Открыть бесплатно';b.disabled=busy||l>0;return}
+ b.className='btn';const cost=cur.price*count;b.innerHTML=`Открыть за ${fmt(cost)} <span class="coin"></span>`;b.disabled=busy||S.bal<cost}
 function roll(pool){const e=Object.entries(pool),t=e.reduce((a,b)=>a+b[1],0);let r=Math.random()*t;for(const[k,w]of e){if((r-=w)<0)return k}return e[0][0]}
 
 function openCase(){
- const cost=cur.price*count;if(busy||S.bal<cost)return;
- busy=true;S.bal-=cost;S.opened+=count;
+ if(busy)return;
+ if(cur.price){const cost=cur.price*count;if(S.bal<cost)return;S.bal-=cost}
+ else{if(freeLeft())return;S.lastFree=Date.now();count=1}
+ busy=true;S.opened+=count;
  won=Array.from({length:count},()=>roll(cur.pool));
  save();
- document.getElementById('cbig').style.display='none';
- const box=document.getElementById('reelBox'),strip=document.getElementById('strip');box.style.display='block';
- const N=50,W=120,win=won[0];
+ $('cbig').style.display='none';
+ count===1?spinH(won[0]):spinV(won);
+}
+// один кейс — горизонтальная лента
+function spinH(win){
+ const box=$('reelBox'),strip=$('strip');box.style.display='block';
+ const N=50,W=120;
  const arr=Array.from({length:N},(_,i)=>i===42?win:roll(cur.pool));
  strip.style.transition='none';strip.style.transform='translateX(0)';
  strip.innerHTML=arr.map(k=>itemHTML(k)).join('');
  const off=42*W+56-box.clientWidth/2+(Math.random()*80-40);
  requestAnimationFrame(()=>requestAnimationFrame(()=>{strip.style.transition='transform 5.5s cubic-bezier(.12,.75,.15,1)';strip.style.transform=`translateX(${-off}px)`}));
- setTimeout(()=>{busy=false;showWin();},5800);
+ setTimeout(()=>{busy=false;showWin()},5800);
 }
-function showWin(){
+// несколько кейсов — вертикальные барабаны, останавливаются по очереди
+function spinV(list){
+ const box=$('vreels');box.style.display='flex';
+ const H=100,N=40,WIN=5;
+ box.innerHTML=list.map(()=>`<div class="vreel"><div class="vline"></div><div class="vstrip"></div></div>`).join('');
+ const BH=box.clientHeight;
+ const center=k=>BH/2-(k*H+47);
+ [...box.children].forEach((reel,i)=>{
+   const st=reel.querySelector('.vstrip');
+   const arr=Array.from({length:N},(_,j)=>j===WIN?list[i]:roll(cur.pool));
+   st.innerHTML=arr.map(k=>itemHTML(k)).join('');
+   st.style.transform=`translateY(${center(N-3)}px)`;
+   const dur=3.2+i*0.9;
+   requestAnimationFrame(()=>requestAnimationFrame(()=>{
+     st.style.transition=`transform ${dur}s cubic-bezier(.15,.7,.2,1)`;
+     st.style.transform=`translateY(${center(WIN)+(Math.random()*30-15)}px)`}));
+   setTimeout(()=>{reel.style.setProperty('--rc',R[ITEMS[list[i]][2]]);reel.classList.add('done');addLive(list[i])},dur*1000);
+ });
+ setTimeout(()=>{busy=false;showWin(true)},(3.2+(list.length-1)*0.9)*1000+700);
+}
+function showWin(fedLive){
  S.inv.push(...won);save();
- won.forEach(addLive);
- document.getElementById('wins').innerHTML=won.map(k=>itemHTML(k)).join('');
- document.getElementById('sellWon').innerHTML=`Продать ${fmt(won.reduce((a,k)=>a+ITEMS[k][3],0))} <span class="coin"></span>`;
- document.getElementById('modal').classList.add('on');
+ if(!fedLive)won.forEach(addLive);
+ $('mTitle').textContent='Ваш дроп';
+ $('wins').innerHTML=won.map(k=>itemHTML(k)).join('');
+ $('sellWon').style.display='';
+ $('sellWon').innerHTML=`Продать ${fmt(won.reduce((a,k)=>a+ITEMS[k][3],0))} <span class="coin"></span>`;
+ $('modal').classList.add('on');
 }
-function closeModal(){document.getElementById('modal').classList.remove('on');document.getElementById('reelBox').style.display='none';document.getElementById('cbig').style.display='grid';updBtn()}
+function closeModal(){$('modal').classList.remove('on');if(cur){$('reelBox').style.display='none';$('vreels').style.display='none';$('cbig').style.display='block';updBtn()}}
 function sellWon(){won.forEach(k=>{const i=S.inv.lastIndexOf(k);if(i>-1){S.inv.splice(i,1);S.bal+=ITEMS[k][3]}});save();closeModal();toast('Продано!')}
-function sell(i){const k=S.inv[i];S.bal+=ITEMS[k][3];S.inv.splice(i,1);save();toast(`${ITEMS[k][0]} продан за ${fmt(ITEMS[k][3])}`)}
-function sellAll(){if(!S.inv.length)return;const s=S.inv.reduce((a,k)=>a+ITEMS[k][3],0);S.bal+=s;S.inv=[];save();toast(`+${fmt(s)} монет`)}
+function sell(i){const k=S.inv[i];S.bal+=ITEMS[k][3];S.inv.splice(i,1);if(upSel===i)upSel=-1;save();toast(`${ITEMS[k][0]} продан за ${fmt(ITEMS[k][3])}`)}
+function sellAll(){if(!S.inv.length)return;const s=S.inv.reduce((a,k)=>a+ITEMS[k][3],0);S.bal+=s;S.inv=[];upSel=-1;save();toast(`+${fmt(s)} монет`)}
 function topup(){S.bal+=500;save();toast('+500 демо-монет')}
-function toast(t){const e=document.getElementById('toast');e.textContent=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',1800)}
+function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',1800)}
+function betOp(id,m){const e=$(id);e.value=Math.max(1,Math.round(+e.value*m))}
+function takeBet(id){const b=+$(id).value;if(!(b>0))return 0;if(b>S.bal){toast('Недостаточно монет');return 0}S.bal-=b;save();return b}
 
-// live-лента дропов
-function addLive(k){const[n,t,r]=ITEMS[k];const l=document.getElementById('live');const d=document.createElement('div');d.className='drop';d.style.setProperty('--rc',R[r]);d.innerHTML=ico(t,R[r])+`<b>${n}</b>`;l.prepend(d);while(l.children.length>20)l.lastChild.remove()}
-const allKeys=Object.keys(ITEMS);
-for(let i=0;i<10;i++)addLive(roll(CASES[Math.floor(Math.random()*CASES.length)].pool));
-setInterval(()=>addLive(roll(CASES[Math.floor(Math.random()*CASES.length)].pool)),3500);
+// live-лента
+function addLive(k){const[n,t,r]=ITEMS[k];const l=$('live');const d=document.createElement('div');d.className='drop';d.style.setProperty('--rc',R[r]);d.innerHTML=ico(t,R[r])+`<b>${n}</b>`;l.prepend(d);while(l.children.length>20)l.lastChild.remove()}
+const rc=()=>CASES[1+Math.floor(Math.random()*(CASES.length-1))];
+for(let i=0;i<10;i++)addLive(roll(rc().pool));
+setInterval(()=>{if(!busy)addLive(roll(rc().pool))},3500);
 
-// ---------- колесо ----------
+// ---------- САПЁР ----------
+let M={size:5,bombs:3,on:false,bet:0,cells:[],open:0};
+const BOMBS={3:[1,2,3],5:[1,3,5,10,24],7:[3,5,10,20,48]};
+function mMult(open){const n=M.size*M.size;let m=1;for(let i=0;i<open;i++)m*=(n-i)/(n-M.bombs-i);return open?m*0.97:1}
+function mSetup(){
+ $('mSize').innerHTML=[3,5,7].map(s=>`<button class="${s===M.size?'on':''}" onclick="if(!M.on){M.size=${s};M.bombs=BOMBS[${s}][${s===3?0:1}];mSetup()}">${s}×${s}</button>`).join('');
+ $('mBombs').innerHTML=BOMBS[M.size].map(b=>`<button class="${b===M.bombs?'on':''}" onclick="if(!M.on){M.bombs=${b};mSetup()}">💣 ${b}</button>`).join('');
+ const g=$('mgrid');g.style.gridTemplateColumns=`repeat(${M.size},1fr)`;
+ if(!M.on)g.innerHTML=Array.from({length:M.size*M.size},(_,i)=>`<button class="cell" onclick="mClick(${i})">?</button>`).join('');
+ mInfo();
+}
+function mInfo(){$('mMul').textContent='x'+mMult(M.open).toFixed(2);$('mNext').textContent=M.open<M.size*M.size-M.bombs?'x'+mMult(M.open+1).toFixed(2):'—';
+ const b=$('mBtn');b.className=M.on&&M.open?'btn green':'btn';b.innerHTML=M.on?(M.open?`Забрать ${fmt(M.bet*mMult(M.open))} <span class="coin"></span>`:'Открой клетку'):'Сделать ставку';b.disabled=M.on&&!M.open}
+function minesBtn(){
+ if(M.on){if(!M.open)return;const w=M.bet*mMult(M.open);S.bal+=w;save();toast(`Выигрыш ${fmt(w)}!`);mEnd(true);return}
+ const b=takeBet('mBet');if(!b)return;
+ M.on=true;M.bet=b;M.open=0;const n=M.size*M.size;
+ const idx=[...Array(n).keys()].sort(()=>Math.random()-.5);M.cells=Array(n).fill(0);idx.slice(0,M.bombs).forEach(i=>M.cells[i]=1);
+ $('mgrid').querySelectorAll('.cell').forEach(c=>{c.className='cell';c.textContent='?'});
+ busy=true;mInfo();
+}
+function mClick(i){
+ if(!M.on)return toast('Сначала сделай ставку');
+ const c=$('mgrid').children[i];if(c.classList.contains('gem'))return;
+ if(M.cells[i]){c.className='cell bomb';c.textContent='💣';toast('Мина! Ставка сгорела');mEnd(false);return}
+ c.className='cell gem';c.textContent='💎';M.open++;
+ if(M.open===M.size*M.size-M.bombs){minesBtn();return}
+ mInfo();
+}
+function mEnd(){M.on=false;busy=false;
+ $('mgrid').querySelectorAll('.cell').forEach((c,i)=>{if(!c.classList.contains('gem')&&!c.classList.contains('bomb')){c.className='cell dim '+(M.cells[i]?'bomb':'gem');c.textContent=M.cells[i]?'💣':'💎'}});
+ M.open=0;mInfo();}
+
+// ---------- ПЛИНКО ----------
+const PM={easy:[5.6,2.1,1.1,1,.5,1,1.1,2.1,5.6],mid:[13,3,1.3,.7,.4,.7,1.3,3,13],hard:[29,4,1.5,.3,.2,.3,1.5,4,29]};
+let pd='easy',balls=[],pRAF=0;
+const PROWS=8,cv=$('plinko'),cx=cv.getContext('2d');
+const PW=600,PH=460,GAP=58,TOP=50;
+const peg=(r,j)=>({x:PW/2+(j-r/2)*GAP,y:TOP+(r-2)*46});
+function slotColor(m){return m>=10?'#ff4a4a':m>=2?'#ff9a2e':m>=1?'#ffd23f':'#3dd6c4'}
+function pSetup(){
+ $('pDiff').innerHTML=[['easy','Легко'],['mid','Средне'],['hard','Сложно']].map(([k,n])=>`<button class="${k===pd?'on':''}" onclick="if(!balls.length){pd='${k}';pSetup()}">${n}</button>`).join('');
+ $('pslots').innerHTML=PM[pd].map(m=>`<div style="background:${slotColor(m)}">${m}</div>`).join('');
+ drawPlinko();
+}
+function drawPlinko(){
+ cx.clearRect(0,0,PW,PH);
+ cx.fillStyle='#e8eefc';for(let r=0;r<PROWS;r++)for(let j=0;j<=r+2;j++){const p=peg(r+2,j);cx.beginPath();cx.arc(p.x,p.y,5,0,7);cx.fill()}
+ balls.forEach(b=>{cx.beginPath();cx.arc(b.x,b.y,10,0,7);const g=cx.createRadialGradient(b.x-3,b.y-3,1,b.x,b.y,10);g.addColorStop(0,'#fff');g.addColorStop(1,'#ff9a2e');cx.fillStyle=g;cx.shadowColor='#ff9a2e';cx.shadowBlur=14;cx.fill();cx.shadowBlur=0});
+}
+function dropBall(){
+ const bet=takeBet('pBet');if(!bet)return;
+ const path=[];let pos=0;for(let i=0;i<PROWS;i++){const d=Math.random()<.5?0:1;path.push(d);pos+=d}
+ // точки траектории: над каждым рядом колышков
+ const pts=[{x:PW/2,y:10}];let col=0;
+ for(let r=0;r<PROWS;r++){const p=peg(r+2,col+1);pts.push({x:p.x,y:p.y-14});col+=path[r]}
+ const sx=PW/2+(col-PROWS/2)*GAP;pts.push({x:sx,y:PH-12});
+ balls.push({pts,seg:0,t:0,x:PW/2,y:10,bet,slot:pos});
+ if(!pRAF)pRAF=requestAnimationFrame(pTick);
+}
+function pTick(){
+ balls.forEach(b=>{b.t+=0.085;if(b.t>=1){b.t=0;b.seg++}
+  if(b.seg>=b.pts.length-1){b.done=true;return}
+  const a=b.pts[b.seg],c=b.pts[b.seg+1],t=b.t;b.x=a.x+(c.x-a.x)*t;b.y=a.y+(c.y-a.y)*t-Math.sin(t*Math.PI)*14});
+ balls.filter(b=>b.done).forEach(b=>{const m=PM[pd][b.slot],w=b.bet*m;S.bal+=w;save();
+  const r=$('pres');r.style.color=m>=1?'#3ddc84':'#ff6b6b';r.textContent=`x${m} → ${fmt(w)}`;
+  const s=$('pslots').children[b.slot];s.classList.add('hit');setTimeout(()=>s.classList.remove('hit'),200)});
+ balls=balls.filter(b=>!b.done);drawPlinko();
+ pRAF=balls.length?requestAnimationFrame(pTick):0;
+}
+
+// ---------- КОЛЕСО ----------
 const WSEG=[];const WM=[{m:2,c:'#3d7bff',n:24},{m:3,c:'#22c57a',n:16},{m:5,c:'#e8364a',n:10},{m:50,c:'#ffbf2e',n:1}];
 WM.forEach(o=>{for(let i=0;i<o.n;i++)WSEG.push(o)});
 for(let i=WSEG.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[WSEG[i],WSEG[j]]=[WSEG[j],WSEG[i]]}
-(function drawWheel(){const n=WSEG.length,a=2*Math.PI/n;let h='';WSEG.forEach((s,i)=>{const a0=i*a-Math.PI/2-a/2,a1=a0+a;h+=`<path d="M0 0L${95*Math.cos(a0)} ${95*Math.sin(a0)}A95 95 0 0 1 ${95*Math.cos(a1)} ${95*Math.sin(a1)}Z" fill="${s.c}" stroke="#0e0f13" stroke-width="1"/>`});
- h+=`<circle r="36" fill="#181a21" stroke="#2a2e39" stroke-width="3"/><text y="7" text-anchor="middle" font-size="20" font-weight="900" fill="#ffb547" font-family="sans-serif">M</text>`;document.getElementById('wheel').innerHTML=h})();
+(function(){const n=WSEG.length,a=2*Math.PI/n;let h='';WSEG.forEach((s,i)=>{const a0=i*a-Math.PI/2-a/2,a1=a0+a;h+=`<path d="M0 0L${95*Math.cos(a0)} ${95*Math.sin(a0)}A95 95 0 0 1 ${95*Math.cos(a1)} ${95*Math.sin(a1)}Z" fill="${s.c}" stroke="#0e0f13" stroke-width="1"/>`});
+ h+=`<circle r="36" fill="#181a21" stroke="#2a2e39" stroke-width="3"/><text y="7" text-anchor="middle" font-size="20" font-weight="900" fill="#ffb547" font-family="sans-serif">M</text>`;$('wheel').innerHTML=h})();
 let pick=0,wrot=0;
-document.getElementById('bets').innerHTML=WM.map((o,i)=>`<button style="background:${o.c};color:${i===3?'#1a1000':'#fff'}" class="${i?'':'on'}" onclick="pickW(${i},this)">${o.m}x</button>`).join('');
+$('bets').innerHTML=WM.map((o,i)=>`<button style="background:${o.c};color:${i===3?'#1a1000':'#fff'}" class="${i?'':'on'}" onclick="pickW(${i},this)">${o.m}x</button>`).join('');
 function pickW(i,el){if(busy)return;pick=i;document.querySelectorAll('#bets button').forEach(b=>b.classList.remove('on'));el.classList.add('on')}
 function spinWheel(){
- const bet=+document.getElementById('wbet').value;if(busy)return;
- if(!(bet>0)||bet>S.bal)return toast('Недостаточно монет');
- busy=true;S.bal-=bet;save();document.getElementById('wres').textContent='';document.getElementById('wbtn').disabled=true;
+ if(busy)return;const bet=takeBet('wbet');if(!bet)return;
+ busy=true;$('wres').textContent='';$('wbtn').disabled=true;
  const i=Math.floor(Math.random()*WSEG.length),n=WSEG.length;
  wrot+=360*6+((360-(i*360/n))-(wrot%360)+360)%360+(Math.random()-.5)*(360/n)*.7;
- document.getElementById('wheel').style.transform=`rotate(${wrot}deg)`;
- setTimeout(()=>{busy=false;document.getElementById('wbtn').disabled=false;const s=WSEG[i],r=document.getElementById('wres');
+ $('wheel').style.transform=`rotate(${wrot}deg)`;
+ setTimeout(()=>{busy=false;$('wbtn').disabled=false;const s=WSEG[i],r=$('wres');
   if(s===WM[pick]){const w=bet*s.m;S.bal+=w;save();r.style.color='#3ddc84';r.textContent=`Выпало ${s.m}x — выигрыш ${fmt(w)}!`;}
   else{r.style.color='#ff6b6b';r.textContent=`Выпало ${s.m}x — мимо`;}},5200);
 }
-render();
+
+// ---------- АПГРЕЙД ----------
+let upSel=-1,upTgt=null,upMul=2,uprot=0;
+function upChance(){if(upSel<0||!upTgt)return 0;return Math.min(.8,ITEMS[S.inv[upSel]][3]/ITEMS[upTgt][3]*.95)}
+function renderUp(){
+ if(upSel>=S.inv.length)upSel=-1;
+ $('upInv').innerHTML=S.inv.length?S.inv.map((k,i)=>`<div class="${i===upSel?'sel':''}" onclick="upPick(${i})">${itemHTML(k)}</div>`).join(''):'<div class="empty" style="grid-column:1/-1">Нет предметов — открой кейс</div>';
+ $('upMult').innerHTML=[1.5,2,3,5,10].map(m=>`<button class="${m===upMul?'on':''}" onclick="upMul=${m};upTgt=null;renderUp()">x${m}</button>`).join('');
+ const base=upSel>=0?ITEMS[S.inv[upSel]][3]:0;
+ const list=Object.keys(ITEMS).filter(k=>ITEMS[k][3]>base&&(!base||ITEMS[k][3]>=base*upMul*.6)).sort((a,b)=>ITEMS[a][3]-ITEMS[b][3]);
+ $('upTargets').innerHTML=list.map(k=>`<div class="${k===upTgt?'sel':''}" onclick="upTgt='${k}';renderUp()">${itemHTML(k)}</div>`).join('');
+ $('upFrom').innerHTML=upSel>=0?itemHTML(S.inv[upSel]):'Выбери свой предмет';
+ $('upTo').innerHTML=upTgt?itemHTML(upTgt):'Выбери цель';
+ const ch=upChance();$('upPct').textContent=(ch*100).toFixed(1)+'%';
+ $('upArc').setAttribute('stroke-dasharray',`${ch*389.6} 400`);
+ $('upBtn').disabled=busy||!ch;
+}
+function upPick(i){if(busy)return;upSel=i;upTgt=null;renderUp()}
+function doUpgrade(){
+ const ch=upChance();if(!ch||busy)return;busy=true;$('upBtn').disabled=true;$('upRes').textContent='';
+ const r=Math.random(),win=r<ch;
+ const ang=win?Math.random()*ch*360*.9+ch*18:ch*360+Math.random()*(360-ch*360)*.9+(360-ch*360)*.05;
+ uprot+=360*5+((ang-(uprot%360))+360)%360;
+ $('uptr').style.transform=`rotate(${uprot}deg)`;
+ setTimeout(()=>{busy=false;const from=S.inv[upSel],res=$('upRes');S.inv.splice(upSel,1);
+  if(win){S.inv.push(upTgt);res.style.color='#3ddc84';res.textContent=`Успех! Получен ${ITEMS[upTgt][0]}`;addLive(upTgt)}
+  else{res.style.color='#ff6b6b';res.textContent=`Не повезло — ${ITEMS[from][0]} сгорел`}
+  upSel=-1;upTgt=null;save()},4200);
+}
+
+mSetup();pSetup();render();
 </script>
 </body>
 </html>
