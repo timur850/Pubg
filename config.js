@@ -1,6 +1,5 @@
-// Данные проекта Supabase: Project Settings → API (или Data API).
-// Ключ "anon public" не секретный — его можно хранить в открытом репозитории.
+// Проект Supabase "metro-drop". Publishable-ключ не секретный — его можно хранить в открытом репозитории.
 window.METRO_CFG = {
-  url: '',   // например https://abcdefgh.supabase.co
-  key: ''    // anon public key (длинная строка eyJ...)
+  url: 'https://pwlwawwhrfsaklcummnf.supabase.co',
+  key: 'sb_publishable_q9gaC6_BjVaQqAbbgyZVpw_8EBx_zqd'
 };

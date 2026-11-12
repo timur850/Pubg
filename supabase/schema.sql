@@ -455,6 +455,23 @@ drop policy if exists "admin" on public.ledger;
 create policy "admin" on public.ledger for select using (public.is_admin());
 -- mines_games: политик нет → никто, кроме функций, не видит мины
 
+-- права для сайта (на случай, если в проекте выключено «Automatically expose new tables»); доступ всё равно режет RLS
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on all tables in schema public to anon, authenticated;
+grant usage, select on all sequences in schema public to anon, authenticated;
+grant execute on function public.is_admin(), public.me(), public.open_case(text, int), public.sell_items(bigint[]),
+  public.withdraw_item(bigint, text), public.upgrade_item(bigint, text), public.mines_start(numeric, int, int),
+  public.mines_cashout(), public.mines_click(int), public.plinko_drop(numeric, text), public.wheel_spin(numeric, int),
+  public.admin_money(uuid, numeric), public.admin_ban(uuid, boolean), public.admin_give(uuid, text),
+  public.admin_withdrawal(bigint, text, text), public.admin_stats() to authenticated;
+revoke execute on function public.me(), public.open_case(text, int), public.sell_items(bigint[]),
+  public.withdraw_item(bigint, text), public.upgrade_item(bigint, text), public.mines_start(numeric, int, int),
+  public.mines_cashout(), public.mines_click(int), public.plinko_drop(numeric, text), public.wheel_spin(numeric, int),
+  public.admin_money(uuid, numeric), public.admin_ban(uuid, boolean), public.admin_give(uuid, text),
+  public.admin_withdrawal(bigint, text, text), public.admin_stats() from public, anon;
+grant execute on function public.is_admin() to anon;
+revoke insert, update, delete on all tables in schema public from anon;
+
 -- внутренние функции нельзя вызывать с сайта
 revoke execute on function public._set(text), public._num(text, numeric), public._player(), public._money(uuid, numeric, text),
   public._bet(public.profiles, numeric, text), public._roll(text), public._mines_mult(int, int, int), public._need_admin(),
