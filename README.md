@@ -40,7 +40,7 @@
 ### Настройка (один раз)
 1. Зарегистрируйся на supabase.com → **New project** (регион — Frankfurt/EU).
 2. **SQL Editor → New query** → вставь весь `supabase/schema.sql` → **Run**.
-3. **Authentication → Sign In / Providers** → включи **Allow anonymous sign-ins** (игроки заходят без регистрации).
+3. **Authentication → Sign In / Providers → Email** → выключи **Confirm email** (игроки регистрируются по почте и паролю без письма).
 4. **Authentication → Users → Add user → Create new user**: твоя почта + пароль, галочка **Auto Confirm User**.
 5. В SQL Editor выполни (со своей почтой):
    `update public.profiles set is_admin = true where id = (select id from auth.users where email = 'ТВОЯ@ПОЧТА');`

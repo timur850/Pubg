@@ -159,6 +159,9 @@ nav svg{width:22px;height:22px}
 .wd small{display:block;color:var(--mut);font-size:11px;margin-top:2px}.wd span{white-space:nowrap;font-size:12px}
 .pnum{font-size:12px;color:var(--mut);font-weight:600;margin-left:6px}
 .mbox .inp input{width:100%}
+.auth{position:fixed;inset:0;z-index:60;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px}
+.auth.on{display:flex}.abox{width:100%;max-width:360px;text-align:center}
+.abox .inp input{width:100%}
 </style>
 </head>
 <body>
@@ -247,7 +250,7 @@ nav svg{width:22px;height:22px}
   </section>
 
   <section class="page" id="p-inv">
-    <h2>Инвентарь <small class="pnum" id="pNum"></small></h2>
+    <h2 style="display:flex;justify-content:space-between;align-items:center">Инвентарь <small class="pnum" id="pNum"></small><button class="btn sec" style="width:auto;padding:7px 12px;font-size:12px;margin-left:auto" onclick="logout()">Выйти</button></h2>
     <div class="stat"><div>Предметов<b id="sCnt">0</b></div><div>Стоимость<b id="sSum">0</b></div><div>Открыто<b id="sOpen">0</b></div></div>
     <button class="btn sec" style="margin-bottom:12px" onclick="sellAll()">Продать всё</button>
     <div class="items inv" id="inv"></div>
@@ -271,6 +274,15 @@ nav svg{width:22px;height:22px}
 <div class="modal" id="m2" onclick="if(event.target===this)closeM2()"><div class="mbox">
   <h3 id="m2t"></h3><div id="m2b"></div>
   <button class="btn sec" style="margin-top:10px" onclick="closeM2()">Закрыть</button>
+</div></div>
+<div class="auth" id="auth"><div class="abox">
+  <div class="logo" style="justify-content:center;margin-bottom:18px"><div class="m">M</div>METRO DROP</div>
+  <div class="seg" id="authTabs"><button data-m="login" onclick="setAuth('login')">Вход</button><button data-m="reg" onclick="setAuth('reg')">Регистрация</button></div>
+  <div class="inp"><input id="aEmail" type="email" placeholder="Почта" autocomplete="email"></div>
+  <div class="inp" style="margin-top:8px"><input id="aPass" type="password" placeholder="Пароль (мин. 6 символов)" autocomplete="current-password"></div>
+  <div class="inp" style="margin-top:8px" id="aPass2w"><input id="aPass2" type="password" placeholder="Повтори пароль" autocomplete="new-password"></div>
+  <button class="btn" id="aBtn" style="margin-top:14px" onclick="authGo()">Войти</button>
+  <p id="aMsg" style="color:var(--mut);font-size:13px;margin-top:12px;min-height:18px"></p>
 </div></div>
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -427,13 +439,40 @@ async function boot(){
  if(!sb){$('grid').innerHTML='<div class="empty" style="grid-column:1/-1">Сайт ещё не подключён к базе (config.js)</div>';return}
  $('grid').innerHTML='<div class="empty" style="grid-column:1/-1">Загрузка…</div>';
  try{
-  let{data:{session}}=await sb.auth.getSession();
-  if(!session){const r=await sb.auth.signInAnonymously();if(r.error)throw r.error;session=r.data.session}
-  S.uid=session.user.id;
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session||session.user.is_anonymous){showAuth();return}
+  S.uid=session.user.id;S.email=session.user.email||'';$('auth').classList.remove('on');
   await loadCatalog();await loadMe();
   render();startLive();
  }catch(e){console.error(e);$('grid').innerHTML=`<div class="empty" style="grid-column:1/-1">Ошибка: ${esc(errText(e))}<br><br><button class="btn" onclick="location.reload()">Обновить</button></div>`}
 }
+
+// ---------- вход / регистрация ----------
+let authMode='login';
+function showAuth(){$('grid').innerHTML='';$('auth').classList.add('on');setAuth(authMode)}
+function setAuth(m){authMode=m;document.querySelectorAll('#authTabs button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+ $('aBtn').textContent=m==='login'?'Войти':'Создать аккаунт';$('aPass2w').style.display=m==='login'?'none':'';$('aMsg').textContent=''}
+async function authGo(){
+ const email=$('aEmail').value.trim().toLowerCase(),pass=$('aPass').value,msg=$('aMsg');
+ if(!/^\S+@\S+\.\S+$/.test(email))return msg.textContent='Введи почту';
+ if(pass.length<6)return msg.textContent='Пароль — минимум 6 символов';
+ if(authMode==='reg'&&pass!==$('aPass2').value)return msg.textContent='Пароли не совпадают';
+ $('aBtn').disabled=true;msg.textContent=authMode==='login'?'Вход…':'Создаю аккаунт…';
+ let r;
+ if(authMode==='reg'){
+  r=await sb.auth.signUp({email,password:pass});
+  if(!r.error&&!r.data.session)r=await sb.auth.signInWithPassword({email,password:pass});
+ }else r=await sb.auth.signInWithPassword({email,password:pass});
+ $('aBtn').disabled=false;
+ if(r.error){const m=r.error.message||'';
+  msg.textContent=/already registered|already exists/i.test(m)?'Такая почта уже зарегистрирована — нажми «Вход»'
+   :/Invalid login/i.test(m)?'Неверная почта или пароль'
+   :/not confirmed/i.test(m)?'Подтверди почту по ссылке из письма и войди'
+   :/rate limit/i.test(m)?'Слишком много попыток, подожди немного'
+   :'Ошибка: '+m;return}
+ boot();
+}
+async function logout(){await sb.auth.signOut();location.reload()}
 
 // Фото предмета: из админки (Supabase) или файл img/items/<id>.png. Нет фото — SVG-иконка.
 function art(k,t,c){const src=ITEMS[k][4]||`img/items/${k}.png`;return ico(t,c)+`<img class="pi" src="${esc(src)}" alt="" loading="lazy" onload="this.parentNode.classList.add('hasimg')" onerror="this.remove()">`}
@@ -452,7 +491,7 @@ function render(){
  $('sCnt').textContent=S.inv.length;
  $('sSum').textContent=fmt(S.inv.reduce((a,o)=>a+ITEMS[o.k][3],0));
  $('sOpen').textContent=S.opened;
- $('pNum').textContent=S.num?'#'+S.num:'';
+ $('pNum').textContent=(S.num?'#'+S.num:'')+(S.email?' · '+S.email:'');
  renderUp();
 }
 function renderWd(){
