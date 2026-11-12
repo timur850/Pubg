@@ -31,3 +31,25 @@
 - `gold.png` — Золотой слиток
 - `uc325.png` — 325 UC
 - `uc660.png` — 660 UC
+
+## База данных и админка (Supabase)
+
+Баланс, инвентарь, кейсы и игры работают через Supabase — накрутить монеты из браузера нельзя.
+Админка: `admin.html` (например `https://timur850.github.io/Pubg/admin.html`).
+
+### Настройка (один раз)
+1. Зарегистрируйся на supabase.com → **New project** (регион — Frankfurt/EU).
+2. **SQL Editor → New query** → вставь весь `supabase/schema.sql` → **Run**.
+3. **Authentication → Sign In / Providers** → включи **Allow anonymous sign-ins** (игроки заходят без регистрации).
+4. **Authentication → Users → Add user → Create new user**: твоя почта + пароль, галочка **Auto Confirm User**.
+5. В SQL Editor выполни (со своей почтой):
+   `update public.profiles set is_admin = true where id = (select id from auth.users where email = 'ТВОЯ@ПОЧТА');`
+6. **Project Settings → API**: скопируй **Project URL** и ключ **anon public** в `config.js`.
+
+### Что умеет админка
+- Статистика: игроки, открытия, доход сайта.
+- Кейсы: цена, картинка, предметы и шансы, расчёт % возврата.
+- Предметы: цена, редкость, фото (загрузка с телефона), можно ли выводить.
+- Игроки: поиск по номеру/ID PUBG, начислить/списать монеты, выдать предмет, бан.
+- Выводы: заявки игроков с ID PUBG → «Выдано» / «Отказ» (предмет возвращается).
+- Настройки: стартовый баланс, таймер бесплатного кейса, текст пополнения и т.д.

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="robots" content="noindex">
+<title>METRO DROP — админка</title>
+<style>
+:root{--bg:#0e0f13;--card:#181a21;--card2:#20232c;--line:#2a2e39;--txt:#eef0f5;--mut:#8a90a0;--acc:#ffb547;--acc2:#ff7a1a;--ok:#3ddc84;--bad:#ff5a5a;
+--c1:#9aa3b5;--c2:#3fa2ff;--c3:#8d5cff;--c4:#ff4fd8;--c5:#ffbf2e}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;padding-bottom:40px}
+button,input,select{font:inherit;color:inherit}
+button{border:0;cursor:pointer;background:none}
+header{position:sticky;top:0;z-index:20;background:rgba(14,15,19,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.logo{font-weight:900;letter-spacing:1px}.logo span{color:var(--acc)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:0 12px 10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;padding:8px 12px;border-radius:10px;background:var(--card);font-size:13px;font-weight:700;color:var(--mut);position:relative}
+.tabs button.on{background:var(--card2);color:var(--txt);box-shadow:inset 0 0 0 2px var(--acc)}
+.tabs .badge{position:absolute;top:-4px;right:-4px;background:var(--bad);color:#fff;font-size:10px;border-radius:9px;padding:1px 6px}
+main{padding:14px;max-width:760px;margin:0 auto}
+h2{font-size:18px;margin:4px 0 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.btn{padding:12px 16px;border-radius:12px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#1a1000;font-weight:800;font-size:14px}
+.btn.s{padding:8px 12px;font-size:13px;border-radius:10px}
+.btn.sec{background:var(--card2);color:var(--txt)}
+.btn.ok{background:var(--ok);color:#03210f}.btn.bad{background:var(--bad);color:#fff}
+.btn:disabled{opacity:.5}
+.list{display:flex;flex-direction:column;gap:6px}
+.row{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:14px;padding:10px 12px}
+.row.tap{cursor:pointer}.row.off{opacity:.45}
+.row .th{width:46px;height:46px;border-radius:10px;background:var(--card2);flex:none;display:grid;place-items:center;overflow:hidden;font-size:20px;border-bottom:3px solid var(--rc,transparent)}
+.row .th img{width:100%;height:100%;object-fit:contain}
+.row .mid{flex:1;min-width:0}.row .mid b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row small,.mut{color:var(--mut);font-size:12px}
+.row .r{text-align:right;font-weight:800;white-space:nowrap}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:16px}
+.card{background:var(--card);border-radius:14px;padding:12px;font-size:12px;color:var(--mut)}
+.card b{display:block;color:var(--txt);font-size:20px;margin-top:4px}
+.card b.p{color:var(--ok)}.card b.n{color:var(--bad)}
+label{display:block;font-size:12px;color:var(--mut);margin:10px 0 4px}
+.f{width:100%;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:16px;outline:none}
+.f:focus{border-color:var(--acc)}
+.chk{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px}
+.chk input{width:20px;height:20px;accent-color:var(--acc)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;display:none;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.mbox{background:var(--card);border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));width:100%;max-width:600px;max-height:92vh;overflow-y:auto}
+.mbox h3{font-size:18px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.mbox h3 button{font-size:22px;color:var(--mut);padding:0 6px}
+.acts{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}.acts .btn{flex:1}
+.pool{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.pool .pr{display:grid;grid-template-columns:1fr 80px 56px 30px;gap:6px;align-items:center}
+.pool .pr .f{padding:9px 8px;font-size:14px}
+.pool .pc{font-size:12px;color:var(--mut);text-align:right}
+.pool .x{color:var(--bad);font-size:18px}
+.rtp{margin-top:10px;background:var(--card2);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.5}
+.preview{width:100%;height:150px;border-radius:12px;background:var(--card2);display:grid;place-items:center;overflow:hidden;margin-top:4px;color:var(--mut);font-size:13px}
+.preview img{width:100%;height:100%;object-fit:contain}
+.login{max-width:360px;margin:12vh auto 0;padding:0 16px}
+.login h1{font-size:24px;margin-bottom:6px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#2b2f3b;padding:10px 16px;border-radius:12px;font-size:14px;z-index:99;display:none;max-width:90vw;text-align:center}
+.toast.err{background:#5a1f25}
+.seg{display:flex;gap:6px;margin-bottom:10px}.seg button{flex:1;padding:8px;border-radius:10px;background:var(--card);font-weight:700;font-size:13px;color:var(--mut)}
+.seg button.on{background:var(--card2);color:var(--txt);box-shadow:inset 0 0 0 2px var(--acc)}
+table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border-radius:14px;overflow:hidden}
+td{padding:9px 12px;border-bottom:1px solid var(--line)}td:last-child{text-align:right;font-weight:700}
+.empty{color:var(--mut);text-align:center;padding:30px 0}
+.pill{display:inline-block;font-size:10px;font-weight:800;padding:2px 6px;border-radius:6px;background:var(--card2);color:var(--mut);margin-left:4px;vertical-align:middle}
+.pill.red{background:#5a1f25;color:#ffb3b3}.pill.grn{background:#173d2a;color:#9df0c0}
+</style>
+</head>
+<body>
+
+<div id="loginBox" class="login" style="display:none">
+  <h1>Админка <span style="color:var(--acc)">METRO DROP</span></h1>
+  <p class="mut">Вход для администратора</p>
+  <label>Почта</label><input class="f" id="lEmail" type="email" autocomplete="username">
+  <label>Пароль</label><input class="f" id="lPass" type="password" autocomplete="current-password">
+  <button class="btn" style="width:100%;margin-top:16px" onclick="login()">Войти</button>
+  <p class="mut" id="lMsg" style="margin-top:12px"></p>
+</div>
+
+<div id="app" style="display:none">
+<header>
+  <div class="top"><div class="logo">METRO <span>DROP</span> · админ</div>
+    <div style="display:flex;gap:6px"><a class="btn s sec" href="./" style="text-decoration:none">Сайт</a><button class="btn s sec" onclick="logout()">Выйти</button></div></div>
+  <div class="tabs" id="tabs"></div>
+</header>
+<main id="view"></main>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeM()"><div class="mbox" id="mbox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const CFG=window.METRO_CFG||{};
+const sb=(window.supabase&&CFG.url&&CFG.key)?supabase.createClient(CFG.url,CFG.key):null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>(Math.round((+n||0)*100)/100).toLocaleString('ru');
+const RC={1:'var(--c1)',2:'var(--c2)',3:'var(--c3)',4:'var(--c4)',5:'var(--c5)'};
+const RN={1:'Обычный',2:'Улучшенный',3:'Редкий',4:'Эпический',5:'Легендарный'};
+const TYPES={rifle:'🔫 Автомат',smg:'🔫 ПП',sniper:'🎯 Снайперка',vest:'🦺 Бронежилет',helmet:'⛑️ Шлем',bag:'🎒 Рюкзак/аптечка',key:'🔑 Ключ',card:'💳 Карта',gold:'🪙 Слиток/лут',gpu:'🖥️ Видеокарта',uc:'💰 UC'};
+const TEMOJI=t=>(TYPES[t]||'📦').split(' ')[0];
+let ITEMS=[],CASES=[],POOL=[],tab='stats',PENDING=0;
+
+function toast(t,err){const e=$('toast');e.textContent=t;e.className='toast'+(err?' err':'');e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',2600)}
+function chk(r){if(r.error){toast(r.error.message,true);throw r.error}return r.data}
+async function rpc(fn,a){return chk(await sb.rpc(fn,a||{}))}
+function openM(h){$('mbox').innerHTML=h;$('modal').classList.add('on')}
+function closeM(){$('modal').classList.remove('on')}
+const mHead=t=>`<h3>${esc(t)}<button onclick="closeM()">✕</button></h3>`;
+const thumb=(img,emoji,r)=>`<div class="th" style="--rc:${RC[r]||'transparent'}">${img?`<img src="${esc(img)}" onerror="this.replaceWith(document.createTextNode('${emoji}'))">`:emoji}</div>`;
+const itemImg=i=>i.img||`img/items/${i.id}.png`;
+const val=id=>$(id).value.trim();
+
+// ---------- вход ----------
+async function start(){
+  if(!sb){document.body.innerHTML='<p class="empty">Заполни config.js (адрес и ключ Supabase)</p>';return}
+  const{data:{session}}=await sb.auth.getSession();
+  if(!session||session.user.is_anonymous)return showLogin();
+  const me=await sb.rpc('me');
+  if(me.error||!me.data.is_admin)return showLogin('У этого аккаунта нет прав админа');
+  $('loginBox').style.display='none';$('app').style.display='block';
+  await loadCatalog();go(tab);
+}
+function showLogin(msg){$('app').style.display='none';$('loginBox').style.display='block';$('lMsg').textContent=msg||''}
+async function login(){
+  $('lMsg').textContent='Вход…';
+  const r=await sb.auth.signInWithPassword({email:val('lEmail'),password:$('lPass').value});
+  if(r.error)return $('lMsg').textContent='Неверная почта или пароль';
+  start();
+}
+async function logout(){await sb.auth.signOut();location.reload()}
+
+// ---------- данные ----------
+async function loadCatalog(){
+  const [i,c,p]=await Promise.all([sb.from('items').select('*').order('sort').order('id'),sb.from('cases').select('*').order('sort').order('id'),sb.from('case_items').select('*')]);
+  ITEMS=chk(i);CASES=chk(c);POOL=chk(p);
+  const w=await sb.from('withdrawals').select('id').eq('status','pending');PENDING=(w.data||[]).length;
+}
+const TABS=[['stats','📊 Статистика'],['cases','📦 Кейсы'],['items','🔫 Предметы'],['players','👥 Игроки'],['wd','💸 Выводы'],['settings','⚙️ Настройки']];
+function renderTabs(){$('tabs').innerHTML=TABS.map(([k,n])=>`<button class="${k===tab?'on':''}" onclick="go('${k}')">${n}${k==='wd'&&PENDING?`<span class="badge">${PENDING}</span>`:''}</button>`).join('')}
+function go(t){tab=t;renderTabs();$('view').innerHTML='<p class="empty">Загрузка…</p>';({stats:vStats,cases:vCases,items:vItems,players:vPlayers,wd:vWd,settings:vSettings})[t]().catch(e=>{console.error(e);$('view').innerHTML=`<p class="empty">Ошибка: ${esc(e.message)}</p>`})}
+
+// ---------- статистика ----------
+async function vStats(){
+  const s=await rpc('admin_stats');
+  const R={case:'Потрачено на кейсы',sell:'Выплачено за продажи',mines:'Сапёр (итог игроков)',plinko:'Плинко (итог игроков)',wheel:'Колесо (итог игроков)',admin:'Начислено админом'};
+  const prof=o=>-Object.entries(o).filter(([k])=>k!=='admin').reduce((a,[,v])=>a+ +v,0);
+  const tbl=o=>`<table>${Object.keys(R).map(k=>`<tr><td>${R[k]}</td><td>${fmt(o[k]||0)}</td></tr>`).join('')}</table>`;
+  const p24=prof(s.today),pAll=prof(s.all);
+  $('view').innerHTML=`<h2>Статистика</h2>
+  <div class="cards">
+   <div class="card">Игроков<b>${s.players}</b></div><div class="card">Новых за 24ч<b>${s.players_today}</b></div>
+   <div class="card">Кейсов за 24ч<b>${s.opens_today}</b></div><div class="card">Кейсов всего<b>${s.opens_total}</b></div>
+   <div class="card">Монет у игроков<b>${fmt(s.balances)}</b></div><div class="card">Ждут вывода<b class="${s.pending?'n':''}">${s.pending}</b></div>
+   <div class="card">Доход сайта 24ч<b class="${p24>=0?'p':'n'}">${fmt(p24)}</b></div><div class="card">Доход сайта всего<b class="${pAll>=0?'p':'n'}">${fmt(pAll)}</b></div>
+  </div>
+  <p class="mut" style="margin-bottom:8px">Движение монет за 24ч (минус — игроки потратили, плюс — получили)</p>${tbl(s.today)}
+  <p class="mut" style="margin:16px 0 8px">За всё время</p>${tbl(s.all)}
+  <p class="mut" style="margin-top:12px">Доход сайта = сколько монет игроки потеряли в кейсах и играх (без учёта начислений админа). Выводы предметов сюда не входят.</p>`;
+}
+
+// ---------- предметы ----------
+async function vItems(){
+  await loadCatalog();
+  $('view').innerHTML=`<h2>Предметы <button class="btn s" onclick="editItem()">+ Новый</button></h2>
+  <div class="list">${ITEMS.map(i=>`<div class="row tap ${i.active?'':'off'}" onclick="editItem('${esc(i.id)}')">${thumb(itemImg(i),TEMOJI(i.type),i.rarity)}
+   <div class="mid"><b>${esc(i.name)}</b><small>${esc(i.id)} · ${RN[i.rarity]}${i.withdrawable?' <span class="pill grn">вывод</span>':''}${i.active?'':' <span class="pill red">скрыт</span>'}</small></div><div class="r">${fmt(i.price)}</div></div>`).join('')||'<p class="empty">Нет предметов</p>'}</div>`;
+}
+function editItem(id){
+  const i=ITEMS.find(x=>x.id===id)||{id:'',name:'',type:'gold',rarity:1,price:10,img:'',withdrawable:false,active:true,sort:ITEMS.length+1};
+  const isNew=!id;
+  openM(`${mHead(isNew?'Новый предмет':'Предмет')}
+  <label>ID (латиница, без пробелов${isNew?'':' — не меняется'})</label><input class="f" id="iId" value="${esc(i.id)}" ${isNew?'':'disabled'} placeholder="например m416_glacier">
+  <label>Название</label><input class="f" id="iName" value="${esc(i.name)}">
+  <div class="two"><div><label>Цена (монеты)</label><input class="f" id="iPrice" type="number" step="0.01" min="0" value="${i.price}"></div>
+  <div><label>Редкость</label><select class="f" id="iRar">${[1,2,3,4,5].map(r=>`<option value="${r}" ${r==i.rarity?'selected':''}>${RN[r]}</option>`).join('')}</select></div></div>
+  <div class="two"><div><label>Иконка-заглушка</label><select class="f" id="iType">${Object.entries(TYPES).map(([k,n])=>`<option value="${k}" ${k===i.type?'selected':''}>${n}</option>`).join('')}</select></div>
+  <div><label>Порядок</label><input class="f" id="iSort" type="number" value="${i.sort}"></div></div>
+  <label>Фото предмета</label>
+  <div class="preview" id="iPrev">${i.img||!isNew?`<img src="${esc(itemImg(i))}" onerror="this.parentNode.textContent='Нет фото'">`:'Нет фото'}</div>
+  <input type="file" id="iFile" accept="image/*" style="margin-top:8px" onchange="prevFile(this,'iPrev')">
+  ${i.img?`<label class="chk"><input type="checkbox" id="iNoImg"> Убрать загруженное фото</label>`:''}
+  <label class="chk"><input type="checkbox" id="iWd" ${i.withdrawable?'checked':''}> Можно вывести в игру (например UC)</label>
+  <label class="chk"><input type="checkbox" id="iAct" ${i.active?'checked':''}> Активен (выпадает из кейсов)</label>
+  <div class="acts">${isNew?'':`<button class="btn bad" onclick="delItem('${esc(i.id)}')">Удалить</button>`}<button class="btn" id="saveBtn" onclick="saveItem(${isNew})">Сохранить</button></div>`);
+}
+function prevFile(inp,box){const f=inp.files[0];if(!f)return;const u=URL.createObjectURL(f);$(box).innerHTML=`<img src="${u}">`}
+async function upload(file,folder,id){
+  const ext=(file.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'');
+  const path=`${folder}/${id}-${Date.now()}.${ext}`;
+  chk(await sb.storage.from('img').upload(path,file,{upsert:true,contentType:file.type}));
+  return sb.storage.from('img').getPublicUrl(path).data.publicUrl;
+}
+async function saveItem(isNew){
+  const id=isNew?val('iId'):$('iId').value;
+  if(!/^[a-z0-9_-]{1,40}$/i.test(id))return toast('ID: только латиница, цифры, _ и -',true);
+  if(!val('iName'))return toast('Введи название',true);
+  if(isNew&&ITEMS.some(x=>x.id===id))return toast('Такой ID уже есть',true);
+  $('saveBtn').disabled=true;
+  try{
+    const old=ITEMS.find(x=>x.id===id);
+    let img=old?old.img:null;
+    if($('iNoImg')&&$('iNoImg').checked)img=null;
+    const f=$('iFile').files[0];if(f)img=await upload(f,'items',id);
+    chk(await sb.from('items').upsert({id,name:val('iName'),price:+$('iPrice').value||0,rarity:+$('iRar').value,type:$('iType').value,sort:+$('iSort').value||0,img,withdrawable:$('iWd').checked,active:$('iAct').checked}));
+    closeM();toast('Сохранено');vItems();
+  }catch(e){$('saveBtn').disabled=false}
+}
+async function delItem(id){
+  if(!confirm('Удалить предмет? Если он уже есть у игроков — удалить не получится, просто сними галочку «Активен».'))return;
+  const r=await sb.from('items').delete().eq('id',id);
+  if(r.error)return toast('Нельзя удалить: предмет есть у игроков. Сделай его неактивным.',true);
+  closeM();toast('Удалено');vItems();
+}
+
+// ---------- кейсы ----------
+async function vCases(){
+  await loadCatalog();
+  $('view').innerHTML=`<h2>Кейсы <button class="btn s" onclick="editCase()">+ Новый</button></h2>
+  <div class="list">${CASES.map(c=>{const n=POOL.filter(p=>p.case_id===c.id).length,r=rtp(c.id,c.price);
+   return `<div class="row tap ${c.active?'':'off'}" onclick="editCase('${esc(c.id)}')">${thumb(c.img,'📦')}
+   <div class="mid"><b>${esc(c.name)}${c.tag?` <span class="pill">${esc(c.tag)}</span>`:''}${c.active?'':' <span class="pill red">скрыт</span>'}</b><small>${n} предм. · ${c.price>0?`возврат ${r.toFixed(0)}%`:'бесплатный'}</small></div>
+   <div class="r">${c.price>0?fmt(c.price):'FREE'}</div></div>`}).join('')||'<p class="empty">Нет кейсов</p>'}</div>`;
+}
+function rtp(cid,price,rows){
+  rows=rows||POOL.filter(p=>p.case_id===cid).map(p=>({item:p.item_id,w:+p.weight}));
+  const tot=rows.reduce((a,r)=>a+(+r.w||0),0);if(!tot||!price)return 0;
+  const ev=rows.reduce((a,r)=>{const it=ITEMS.find(i=>i.id===r.item);return a+(it?+it.price:0)*(+r.w||0)/tot},0);
+  return ev/price*100;
+}
+let ED=[];
+function editCase(id){
+  const c=CASES.find(x=>x.id===id)||{id:'',name:'',price:100,col:'#ffbf2e',img:'',tag:'',sort:CASES.length+1,active:true};
+  const isNew=!id;
+  ED=POOL.filter(p=>p.case_id===id).map(p=>({item:p.item_id,w:+p.weight}));
+  openM(`${mHead(isNew?'Новый кейс':'Кейс')}
+  <label>ID (латиница${isNew?'':' — не меняется'})</label><input class="f" id="cId" value="${esc(c.id)}" ${isNew?'':'disabled'} placeholder="например gold_case">
+  <label>Название</label><input class="f" id="cName" value="${esc(c.name)}">
+  <div class="two"><div><label>Цена (0 = бесплатный с таймером)</label><input class="f" id="cPrice" type="number" step="0.01" min="0" value="${c.price}" oninput="renderPool()"></div>
+  <div><label>Метка (FREE, ХИТ, TOP…)</label><input class="f" id="cTag" value="${esc(c.tag)}"></div></div>
+  <div class="two"><div><label>Цвет</label><input class="f" id="cCol" type="color" value="${esc(c.col)}" style="height:46px;padding:4px"></div>
+  <div><label>Порядок</label><input class="f" id="cSort" type="number" value="${c.sort}"></div></div>
+  <label>Картинка кейса</label>
+  <div class="preview" id="cPrev">${c.img?`<img src="${esc(c.img)}">`:'Нет картинки'}</div>
+  <input type="file" id="cFile" accept="image/*" style="margin-top:8px" onchange="prevFile(this,'cPrev')">
+  <label class="chk"><input type="checkbox" id="cAct" ${c.active?'checked':''}> Показывать на сайте</label>
+  <label style="margin-top:16px">Содержимое: предмет · вес · шанс</label>
+  <div class="pool" id="pool"></div>
+  <button class="btn s sec" style="margin-top:8px" onclick="addPoolRow()">+ Добавить предмет</button>
+  <div class="rtp" id="rtp"></div>
+  <div class="acts">${isNew?'':`<button class="btn bad" onclick="delCase('${esc(c.id)}')">Удалить</button>`}<button class="btn" id="saveBtn" onclick="saveCase(${isNew})">Сохранить</button></div>`);
+  renderPool();
+}
+function addPoolRow(){const f=ITEMS.find(i=>i.active&&!ED.some(r=>r.item===i.id))||ITEMS[0];if(!f)return toast('Сначала создай предметы',true);ED.push({item:f.id,w:10});renderPool()}
+function renderPool(){
+  const tot=ED.reduce((a,r)=>a+(+r.w||0),0);
+  $('pool').innerHTML=ED.map((r,i)=>`<div class="pr"><select class="f" onchange="ED[${i}].item=this.value;renderPool()">${ITEMS.map(it=>`<option value="${esc(it.id)}" ${it.id===r.item?'selected':''}>${esc(it.name)} · ${fmt(it.price)}${it.active?'':' (скрыт)'}</option>`).join('')}</select>
+   <input class="f" type="number" min="0" step="0.1" value="${r.w}" oninput="ED[${i}].w=+this.value;updPct()"><span class="pc" data-i="${i}"></span><button class="x" onclick="ED.splice(${i},1);renderPool()">✕</button></div>`).join('')||'<p class="mut">Добавь предметы</p>';
+  updPct();
+}
+function updPct(){
+  const tot=ED.reduce((a,r)=>a+(+r.w||0),0);
+  document.querySelectorAll('#pool .pc').forEach(e=>{const w=+ED[e.dataset.i].w||0;e.textContent=tot?(w/tot*100).toFixed(w/tot<.01?2:1)+'%':'—'});
+  const price=+$('cPrice').value||0,r=rtp(null,price,ED);
+  const ev=price*r/100;
+  $('rtp').innerHTML=price>0?`Средняя цена дропа: <b>${fmt(ev)}</b> из ${fmt(price)} → возврат игроку <b style="color:${r<=100?'var(--ok)':'var(--bad)'}">${r.toFixed(1)}%</b><br><span class="mut">${r<=100?`Сайт в среднем зарабатывает ${fmt(price-ev)} с открытия.`:'Внимание: кейс убыточный для сайта!'}</span>`:'<span class="mut">Бесплатный кейс — открывается раз в N часов (настройка free_hours).</span>';
+}
+async function saveCase(isNew){
+  const id=isNew?val('cId'):$('cId').value;
+  if(!/^[a-z0-9_-]{1,40}$/i.test(id))return toast('ID: только латиница, цифры, _ и -',true);
+  if(!val('cName'))return toast('Введи название',true);
+  if(isNew&&CASES.some(x=>x.id===id))return toast('Такой ID уже есть',true);
+  const rows=ED.filter(r=>r.item&&r.w>0);
+  if(new Set(rows.map(r=>r.item)).size!==rows.length)return toast('Один предмет добавлен дважды',true);
+  if(!rows.length)return toast('Добавь хотя бы один предмет',true);
+  $('saveBtn').disabled=true;
+  try{
+    const old=CASES.find(x=>x.id===id);let img=old?old.img:null;
+    const f=$('cFile').files[0];if(f)img=await upload(f,'cases',id);
+    chk(await sb.from('cases').upsert({id,name:val('cName'),price:+$('cPrice').value||0,tag:val('cTag'),col:$('cCol').value,sort:+$('cSort').value||0,img,active:$('cAct').checked}));
+    chk(await sb.from('case_items').delete().eq('case_id',id));
+    chk(await sb.from('case_items').insert(rows.map(r=>({case_id:id,item_id:r.item,weight:r.w}))));
+    closeM();toast('Сохранено');vCases();
+  }catch(e){$('saveBtn').disabled=false}
+}
+async function delCase(id){
+  if(!confirm('Удалить кейс? (Можно просто снять «Показывать на сайте»)'))return;
+  const r=await sb.from('cases').delete().eq('id',id);if(r.error)return toast(r.error.message,true);
+  closeM();toast('Удалено');vCases();
+}
+
+// ---------- игроки ----------
+let PL=[];
+async function vPlayers(q){
+  let r=sb.from('profiles').select('*');
+  q=(q||'').trim().replace(/^#/,'');
+  if(q)r=/^\d{1,9}$/.test(q)?r.or(`num.eq.${q},pubg_id.eq.${q}`):r.eq('pubg_id',q);
+  else r=r.order('created_at',{ascending:false}).limit(50);
+  PL=chk(await r);
+  $('view').innerHTML=`<h2>Игроки</h2>
+  <div style="display:flex;gap:6px;margin-bottom:10px"><input class="f" id="pq" placeholder="Номер игрока (#12) или ID PUBG" value="${esc(q)}" onkeydown="if(event.key==='Enter')vPlayers(this.value)"><button class="btn s" onclick="vPlayers(val('pq'))">Найти</button></div>
+  ${q?'':'<p class="mut" style="margin-bottom:8px">Последние 50 игроков</p>'}
+  <div class="list">${PL.map((p,i)=>`<div class="row tap" onclick="openPlayer(${i})"><div class="th">${p.is_admin?'👑':'👤'}</div>
+   <div class="mid"><b>#${p.num}${p.banned?' <span class="pill red">бан</span>':''}</b><small>${p.pubg_id?'PUBG '+esc(p.pubg_id)+' · ':''}кейсов: ${p.opened} · ${new Date(p.created_at).toLocaleDateString('ru')}</small></div>
+   <div class="r">${fmt(p.balance)}</div></div>`).join('')||'<p class="empty">Никого не найдено</p>'}</div>`;
+}
+async function openPlayer(i){
+  const p=PL[i];
+  const inv=chk(await sb.from('inventory').select('id,item_id').eq('user_id',p.id).eq('status','own').order('id',{ascending:false}));
+  const sum=inv.reduce((a,v)=>{const it=ITEMS.find(x=>x.id===v.item_id);return a+(it?+it.price:0)},0);
+  openM(`${mHead('Игрок #'+p.num)}
+  <div class="cards" style="margin-top:8px"><div class="card">Баланс<b>${fmt(p.balance)}</b></div><div class="card">Инвентарь<b>${inv.length} шт · ${fmt(sum)}</b></div></div>
+  <p class="mut">ID PUBG: ${esc(p.pubg_id||'—')} · кейсов открыто: ${p.opened}</p>
+  <label>Монеты</label>
+  <div style="display:flex;gap:6px"><input class="f" id="pAmt" type="number" min="0" step="1" placeholder="Сумма"><button class="btn s ok" onclick="money('${p.id}',1,${i})">+ Начислить</button><button class="btn s bad" onclick="money('${p.id}',-1,${i})">− Списать</button></div>
+  <label>Выдать предмет</label>
+  <div style="display:flex;gap:6px"><select class="f" id="pItem">${ITEMS.map(it=>`<option value="${esc(it.id)}">${esc(it.name)} · ${fmt(it.price)}</option>`).join('')}</select><button class="btn s" onclick="give('${p.id}',${i})">Выдать</button></div>
+  <label>Предметы игрока</label>
+  <div class="list">${inv.slice(0,30).map(v=>{const it=ITEMS.find(x=>x.id===v.item_id)||{name:v.item_id,price:0};return `<div class="row" style="padding:6px 10px"><div class="mid">${esc(it.name)}</div><div class="r">${fmt(it.price)}</div></div>`}).join('')||'<p class="mut">Пусто</p>'}</div>
+  <div class="acts"><button class="btn ${p.banned?'ok':'bad'}" onclick="ban('${p.id}',${!p.banned})">${p.banned?'Разбанить':'Забанить'}</button></div>`);
+}
+async function money(uid,sign,i){
+  const a=+$('pAmt').value;if(!(a>0))return toast('Введи сумму',true);
+  const b=await rpc('admin_money',{p_user:uid,p_delta:a*sign});
+  PL[i].balance=b;toast(`Баланс: ${fmt(b)}`);openPlayer(i);
+}
+async function give(uid,i){await rpc('admin_give',{p_user:uid,p_item:$('pItem').value});toast('Предмет выдан');openPlayer(i)}
+async function ban(uid,b){await rpc('admin_ban',{p_user:uid,p_ban:b});closeM();toast(b?'Забанен':'Разбанен');vPlayers(val('pq'))}
+
+// ---------- выводы ----------
+let wdMode='pending',WDL=[];
+async function vWd(){
+  let r=sb.from('withdrawals').select('*').order('id',{ascending:wdMode==='pending'}).limit(100);
+  if(wdMode==='pending')r=r.eq('status','pending');
+  WDL=chk(await r);
+  const ids=[...new Set(WDL.map(w=>w.user_id))];
+  const pr=ids.length?chk(await sb.from('profiles').select('id,num').in('id',ids)):[];
+  const num=Object.fromEntries(pr.map(p=>[p.id,p.num]));
+  if(wdMode==='pending'){PENDING=WDL.length;renderTabs()}
+  const L={pending:'⏳ ждёт',done:'✅ выдано',rejected:'❌ отклонено'};
+  $('view').innerHTML=`<h2>Выводы</h2>
+  <div class="seg"><button class="${wdMode==='pending'?'on':''}" onclick="wdMode='pending';vWd()">Ожидают</button><button class="${wdMode==='all'?'on':''}" onclick="wdMode='all';vWd()">Все</button></div>
+  <div class="list">${WDL.map(w=>{const it=ITEMS.find(x=>x.id===w.item_id)||{name:w.item_id,id:w.item_id,type:'uc'};return `<div class="row">${thumb(itemImg(it),TEMOJI(it.type),it.rarity)}
+   <div class="mid"><b>${esc(it.name)}</b><small>Игрок #${num[w.user_id]||'?'} · ${new Date(w.created_at).toLocaleString('ru',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</small>
+   <div style="margin-top:4px;font-size:15px;font-weight:800;user-select:all" onclick="copy('${esc(w.pubg_id)}')">PUBG ID: ${esc(w.pubg_id)} 📋</div>${w.note?`<small>${esc(w.note)}</small>`:''}</div>
+   ${w.status==='pending'?`<div style="display:flex;flex-direction:column;gap:6px"><button class="btn s ok" onclick="wdSet(${w.id},'done')">Выдано</button><button class="btn s bad" onclick="wdSet(${w.id},'rejected')">Отказ</button></div>`:`<div class="r" style="font-size:12px">${L[w.status]}</div>`}</div>`}).join('')||'<p class="empty">Заявок нет</p>'}</div>
+  <p class="mut" style="margin-top:12px">«Выдано» — ты закинул предмет/UC игроку. «Отказ» — предмет вернётся игроку в инвентарь.</p>`;
+}
+function copy(t){navigator.clipboard&&navigator.clipboard.writeText(t).then(()=>toast('ID скопирован'))}
+async function wdSet(id,st){
+  let note=null;
+  if(st==='rejected'){note=prompt('Причина отказа (игрок увидит):','');if(note===null)return}
+  await rpc('admin_withdrawal',{p_id:id,p_status:st,p_note:note||null});toast(st==='done'?'Отмечено как выдано':'Отклонено, предмет возвращён');vWd();
+}
+
+// ---------- настройки ----------
+let SETL=[];
+async function vSettings(){
+  SETL=chk(await sb.from('settings').select('*').order('key'));
+  $('view').innerHTML=`<h2>Настройки</h2>
+  ${SETL.map((s,i)=>`<label>${esc(s.note||s.key)} <span class="pill">${esc(s.key)}</span></label><input class="f" id="s${i}" value="${esc(s.value)}">`).join('')}
+  <button class="btn" style="width:100%;margin-top:16px" onclick="saveSettings()">Сохранить настройки</button>`;
+}
+async function saveSettings(){
+  chk(await sb.from('settings').upsert(SETL.map((s,i)=>({key:s.key,value:$('s'+i).value.trim(),note:s.note}))));
+  toast('Сохранено');
+}
+
+start();
+</script>
+</body>
+</html>
