@@ -53,3 +53,9 @@
 - Игроки: поиск по номеру/ID PUBG, начислить/списать монеты, выдать предмет, бан.
 - Выводы: заявки игроков с ID PUBG → «Выдано» / «Отказ» (предмет возвращается).
 - Настройки: стартовый баланс, таймер бесплатного кейса, текст пополнения и т.д.
+
+## Пополнение (CryptoBot и NOWPayments)
+Серверные функции: `supabase/functions/pay` (создать счёт / проверить) и `supabase/functions/pay-hook` (уведомления об оплате).
+Секреты (Supabase → Edge Functions → Secrets): `CRYPTOPAY_TOKEN`, `NOWPAYMENTS_API_KEY`, `NOWPAYMENTS_IPN_SECRET`.
+Включение и курс — в админке → Настройки (`pay_on`, `np_on`, `coins_per_usd`, `pay_min`, `pay_max`).
+Вебхук для CryptoBot: `https://pwlwawwhrfsaklcummnf.supabase.co/functions/v1/pay-hook`.

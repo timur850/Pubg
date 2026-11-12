@@ -162,6 +162,10 @@ nav svg{width:22px;height:22px}
 .auth{position:fixed;inset:0;z-index:60;background:var(--bg);display:none;align-items:center;justify-content:center;padding:20px}
 .auth.on{display:flex}.abox{width:100%;max-width:360px;text-align:center}
 .abox .inp input{width:100%}
+.tq{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}.tq button{flex:1;min-width:56px;background:var(--card2);padding:9px 4px;border-radius:10px;font-weight:800;font-size:13px}
+.tusd{font-size:15px;font-weight:800;margin:10px 0 12px}.tnote{font-size:11px;color:var(--mut);margin-top:10px;line-height:1.4}
+.lnk{color:var(--acc);font-size:13px;margin-top:8px;text-decoration:underline}.tsep{color:var(--mut);font-size:12px;margin:14px 0 10px}
+.mbox{max-height:90vh;overflow-y:auto}
 </style>
 </head>
 <body>
@@ -444,6 +448,7 @@ async function boot(){
   S.uid=session.user.id;S.email=session.user.email||'';$('auth').classList.remove('on');
   await loadCatalog();await loadMe();
   render();startLive();
+  if(SET.pay_on==='1')checkPay(false);
  }catch(e){console.error(e);$('grid').innerHTML=`<div class="empty" style="grid-column:1/-1">Ошибка: ${esc(errText(e))}<br><br><button class="btn" onclick="location.reload()">Обновить</button></div>`}
 }
 
@@ -594,7 +599,46 @@ async function withdraw(id){
  try{await rpc('withdraw_item',{p_inv:id,p_pubg:v})}catch(e){return}
  S.pubg=v;S.inv=S.inv.filter(o=>o.id!==id);render();closeM2();loadWd();toast('Заявка отправлена, жди выдачу')}
 function topup(){
- openM2('Пополнение',`<p style="color:var(--mut);line-height:1.5;margin-bottom:12px">${esc(SET.topup_text||'')}</p><div class="stat"><div>Твой номер игрока<b>#${S.num||'—'}</b></div></div>${SET.topup_link?`<a class="btn" style="text-decoration:none" href="${esc(SET.topup_link)}" target="_blank" rel="noopener">Написать админу</a>`:''}`)}
+ const auto=SET.pay_on==='1'||SET.np_on==='1',rate=+SET.coins_per_usd||100,min=+SET.pay_min||100;
+ let h='';
+ if(auto){
+  h+=`<div class="tq">${[min,500,1000,2500,5000].filter((v,i,a)=>v>=min&&a.indexOf(v)===i).map(v=>`<button onclick="$('tAmt').value=${v};tUpd()">${fmt(v)}</button>`).join('')}</div>
+  <div class="inp"><input id="tAmt" type="number" inputmode="numeric" min="${min}" value="${Math.max(min,500)}" oninput="tUpd()"><span class="coin"></span></div>
+  <p class="tusd" id="tUsd"></p>
+  ${SET.np_on==='1'?`<button class="btn" onclick="pay('nowpayments')">💳 Оплатить криптой (BTC, USDT, ETH, TON…)</button>`:''}
+  ${SET.pay_on==='1'?`<button class="btn sec" style="margin-top:8px" onclick="pay('cryptobot')">✈️ Через CryptoBot в Telegram</button>`:''}
+  <p class="tnote">Монеты начислятся автоматически после оплаты. Курс: 1 $ = ${fmt(rate)} монет.</p>
+  <button class="lnk" onclick="checkPay(true)">Я оплатил — проверить</button>
+  <div class="tsep">или</div>`;
+ }
+ h+=`<p style="color:var(--mut);line-height:1.5;margin-bottom:12px">${esc(SET.topup_text||'')}</p><div class="stat"><div>Твой номер игрока<b>#${S.num||'—'}</b></div></div>${SET.topup_link?`<a class="btn sec" style="text-decoration:none" href="${esc(SET.topup_link)}" target="_blank" rel="noopener">Написать админу</a>`:''}`;
+ openM2('Пополнение',h);if(auto)tUpd();
+}
+function tUpd(){const v=+$('tAmt').value||0,r=+SET.coins_per_usd||100;$('tUsd').textContent=v?`К оплате: ${(Math.ceil(v/r*100)/100).toFixed(2)} $`:''}
+let payWait=0;
+async function pay(provider){
+ const coins=Math.floor(+$('tAmt').value||0),min=+SET.pay_min||100,max=+SET.pay_max||100000;
+ if(coins<min||coins>max)return toast(`Сумма от ${fmt(min)} до ${fmt(max)} монет`);
+ const w=window.open('','_blank');
+ toast('Создаю счёт…');
+ const{data,error}=await sb.functions.invoke('pay',{body:{action:'create',provider,coins,return_url:location.href.split('#')[0]}});
+ let msg=error&&error.message;
+ if(error&&error.context&&error.context.json){try{msg=(await error.context.json()).error||msg}catch(e){}}
+ if(error||!data||!data.url){if(w)w.close();return toast(msg||'Не удалось создать счёт')}
+ if(w)w.location.href=data.url;else location.href=data.url;
+ payWait=Date.now();toast('Оплати счёт — монеты придут автоматически');
+}
+async function checkPay(manual){
+ if(!sb||!S.uid)return;
+ const before=S.bal;
+ if(SET.pay_on==='1'){const{data}=await sb.functions.invoke('pay',{body:{action:'check'}});if(data&&data.credited>0){S.bal=+data.balance;renderBal();toast(`+${fmt(data.credited)} монет — оплата получена!`);return}}
+ const m=await sb.rpc('me');
+ if(m.data){S.bal=+m.data.balance;renderBal();if(S.bal>before)return toast(`+${fmt(S.bal-before)} монет — оплата получена!`)}
+ if(manual)toast('Оплата пока не пришла. Крипта может идти несколько минут');
+}
+// когда игрок вернулся на сайт после оплаты — проверяем
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&payWait&&Date.now()-payWait<3*3600e3)checkPay(false)});
+setInterval(()=>{if(!document.hidden&&payWait&&Date.now()-payWait<3600e3)checkPay(false)},20000);
 function openM2(t,h){$('m2t').textContent=t;$('m2b').innerHTML=h;$('m2').classList.add('on')}
 function closeM2(){$('m2').classList.remove('on')}
 function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',2200)}

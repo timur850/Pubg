@@ -161,8 +161,8 @@ function go(t){tab=t;renderTabs();$('view').innerHTML='<p class="empty">Загр
 // ---------- статистика ----------
 async function vStats(){
   const s=await rpc('admin_stats');
-  const R={case:'Потрачено на кейсы',sell:'Выплачено за продажи',mines:'Сапёр (итог игроков)',plinko:'Плинко (итог игроков)',wheel:'Колесо (итог игроков)',admin:'Начислено админом'};
-  const prof=o=>-Object.entries(o).filter(([k])=>k!=='admin').reduce((a,[,v])=>a+ +v,0);
+  const R={deposit:'Пополнения (монет)',case:'Потрачено на кейсы',sell:'Выплачено за продажи',mines:'Сапёр (итог игроков)',plinko:'Плинко (итог игроков)',wheel:'Колесо (итог игроков)',admin:'Начислено админом'};
+  const prof=o=>-Object.entries(o).filter(([k])=>k!=='admin'&&k!=='deposit').reduce((a,[,v])=>a+ +v,0);
   const tbl=o=>`<table>${Object.keys(R).map(k=>`<tr><td>${R[k]}</td><td>${fmt(o[k]||0)}</td></tr>`).join('')}</table>`;
   const p24=prof(s.today),pAll=prof(s.all);
   $('view').innerHTML=`<h2>Статистика</h2>
@@ -170,11 +170,18 @@ async function vStats(){
    <div class="card">Игроков<b>${s.players}</b></div><div class="card">Новых за 24ч<b>${s.players_today}</b></div>
    <div class="card">Кейсов за 24ч<b>${s.opens_today}</b></div><div class="card">Кейсов всего<b>${s.opens_total}</b></div>
    <div class="card">Монет у игроков<b>${fmt(s.balances)}</b></div><div class="card">Ждут вывода<b class="${s.pending?'n':''}">${s.pending}</b></div>
+   <div class="card">Пополнено 24ч<b class="p">${fmt(s.usd_today)} $</b></div><div class="card">Пополнено всего<b class="p">${fmt(s.usd_total)} $</b></div>
    <div class="card">Доход сайта 24ч<b class="${p24>=0?'p':'n'}">${fmt(p24)}</b></div><div class="card">Доход сайта всего<b class="${pAll>=0?'p':'n'}">${fmt(pAll)}</b></div>
   </div>
   <p class="mut" style="margin-bottom:8px">Движение монет за 24ч (минус — игроки потратили, плюс — получили)</p>${tbl(s.today)}
   <p class="mut" style="margin:16px 0 8px">За всё время</p>${tbl(s.all)}
-  <p class="mut" style="margin-top:12px">Доход сайта = сколько монет игроки потеряли в кейсах и играх (без учёта начислений админа). Выводы предметов сюда не входят.</p>`;
+  <p class="mut" style="margin-top:12px">Доход сайта = сколько монет игроки потеряли в кейсах и играх (без пополнений и начислений админа). Выводы предметов сюда не входят.</p>
+  <p class="mut" style="margin:16px 0 8px">Последние пополнения</p><div class="list" id="depList"><p class="mut">Загрузка…</p></div>`;
+  const d=await sb.from('deposits').select('id,user_id,coins,usd,status,provider,asset,created_at').order('id',{ascending:false}).limit(30);
+  const ds=d.data||[];const ids=[...new Set(ds.map(x=>x.user_id))];
+  const pr=ids.length?((await sb.from('profiles').select('id,num').in('id',ids)).data||[]):[];const num=Object.fromEntries(pr.map(p=>[p.id,p.num]));
+  const L={paid:'✅',pending:'⏳',expired:'⌛'};
+  $('depList').innerHTML=ds.map(x=>`<div class="row" style="padding:8px 12px"><div class="mid"><b>${L[x.status]||''} #${num[x.user_id]||'?'} · ${fmt(x.coins)} монет</b><small>${x.provider==='nowpayments'?'NOWPayments':'CryptoBot'}${x.asset?' · '+esc(x.asset):''} · ${new Date(x.created_at).toLocaleString('ru',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</small></div><div class="r">${fmt(x.usd)} $</div></div>`).join('')||'<p class="mut">Пока нет</p>';
 }
 
 // ---------- предметы ----------
