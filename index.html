@@ -151,6 +151,10 @@ nav svg{width:22px;height:22px}
 .mult{display:flex;gap:6px;margin:8px 0}
 .mult button{flex:1;background:var(--card);padding:9px 0;border-radius:10px;font-weight:800;font-size:13px}
 .mult button.on{background:var(--card2);box-shadow:inset 0 0 0 2px var(--acc)}
+.it .pi{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:86%;height:62px;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
+.wins .it .pi{height:80px}
+.hasimg>svg{display:none}
+.drop .pi{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:54px;height:40px;object-fit:contain}
 </style>
 </head>
 <body>
@@ -393,7 +397,9 @@ const fmt=n=>(Math.round(n*100)/100).toLocaleString('ru');
 const $=id=>document.getElementById(id);
 let cur=null,count=1,busy=false,won=[];
 
-function itemHTML(k,extra=''){const[n,t,r,p]=ITEMS[k];return `<div class="it r${r}" style="--rc:${R[r]}">${extra}${ico(t,R[r])}<small>${RN[r]} · ${fmt(p)}</small><b>${n}</b></div>`}
+// Фото предмета: положи файл img/items/<id>.png (например img/items/m416.png). Нет файла — показывается иконка.
+function art(k,t,c){return ico(t,c)+`<img class="pi" src="img/items/${k}.png" alt="" loading="lazy" onload="this.parentNode.classList.add('hasimg')" onerror="this.remove()">`}
+function itemHTML(k,extra=''){const[n,t,r,p]=ITEMS[k];return `<div class="it r${r}" style="--rc:${R[r]}">${extra}${art(k,t,R[r])}<small>${RN[r]} · ${fmt(p)}</small><b>${n}</b></div>`}
 function freeLeft(){return Math.max(0,S.lastFree+FREE_MS-Date.now())}
 function hms(ms){const s=Math.ceil(ms/1000);return [Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(x=>String(x).padStart(2,'0')).join(':')}
 
@@ -496,7 +502,7 @@ function betOp(id,m){const e=$(id);e.value=Math.max(1,Math.round(+e.value*m))}
 function takeBet(id){const b=+$(id).value;if(!(b>0))return 0;if(b>S.bal){toast('Недостаточно монет');return 0}S.bal-=b;save();return b}
 
 // live-лента
-function addLive(k){const[n,t,r]=ITEMS[k];const l=$('live');const d=document.createElement('div');d.className='drop';d.style.setProperty('--rc',R[r]);d.innerHTML=ico(t,R[r])+`<b>${n}</b>`;l.prepend(d);while(l.children.length>20)l.lastChild.remove()}
+function addLive(k){const[n,t,r]=ITEMS[k];const l=$('live');const d=document.createElement('div');d.className='drop';d.style.setProperty('--rc',R[r]);d.innerHTML=art(k,t,R[r])+`<b>${n}</b>`;l.prepend(d);while(l.children.length>20)l.lastChild.remove()}
 const rc=()=>CASES[1+Math.floor(Math.random()*(CASES.length-1))];
 for(let i=0;i<10;i++)addLive(roll(rc().pool));
 setInterval(()=>{if(!busy)addLive(roll(rc().pool))},3500);
